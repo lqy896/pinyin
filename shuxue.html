@@ -131,11 +131,6 @@
             <div style="display: inline-block;width: 90%;margin-top:10px;">
                 <button class="btn btn-success" style="width: 100%;" id="btn_start">下一个</button>
             </div>
-
-
-            <!--div style="display: inline-block;width: 45%;">
-                <button class="btn btn-success" style="width: 100%;" id="subRes">提交</button>
-            </div-->
         </div>
 
     </div>
@@ -162,9 +157,7 @@
         var max = 9;
         var min = 2;
 
-        var score = 0;
-
-        var scoreSpan = document.getElementById("score");
+        document.getElementById("score").innerHTML = window.localStorage.getItem("scroe");
 
         if (urlStr == "5") {
             addition = false;
@@ -184,10 +177,10 @@
             }
         });
 
-        function getDataMin10(d1){
-            while(true){
+        function getDataMin10(d1) {
+            while (true) {
                 d2 = Math.floor(Math.random() * (max - min + 1)) + min;
-                if(d1+d2<11){
+                if (d1 + d2 < 11) {
                     return d2;
                 }
             }
@@ -200,7 +193,7 @@
             if (addition) {
                 d1 = Math.floor(Math.random() * (max - min + 1)) + min;
                 d2 = Math.floor(Math.random() * (max - min + 1)) + min;
-              // d2=getDataMin10(d1);
+                // d2=getDataMin10(d1);
                 return [d1, d2, d1 + d2];
             } else {
                 d1 = Math.floor(Math.random() * (max - 4 + 1)) + 4;
@@ -240,24 +233,14 @@
         }
 
 
+        function yorRight() {
+            addScore();
+            createAudio("yes.wav");
 
-        $("#subRes").click(function (e) {
-            if (calRes == data3) {
-                yorRight();
-            } else {
-                createAudio("no.wav");
-            }
-        });
-
-        function yorRight(){
-            score += 10;
-                scoreSpan.innerHTML = score;
-                createAudio("yes.wav");
-
-                setTimeout(() => {
-                    stop = false;
-                    createOne();
-                }, 2600);
+            setTimeout(() => {
+                stop = false;
+                createOne();
+            }, 2600);
         }
 
 
@@ -274,7 +257,6 @@
         });
 
 
-
         var divParent = document.getElementById("dataParent");
 
         function createDate(index) {
@@ -285,7 +267,7 @@
                 calRes = calRes * 10;
                 calRes = calRes + index;
                 $("#data3").html(calRes);
-                if(calRes==data3){
+                if (calRes == data3) {
                     yorRight();
                 }
 

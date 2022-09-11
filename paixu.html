@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<html>
+<style type="text/css">
+    .divText {
+        width: 19%;
+        background-color: #98FB98;
+        border: 2px salmon;
+        margin-left: 1px;
+        margin-top: 1px;
+        float: left;
+        font-size: 45px;
+        line-height: 90px;
+        text-align: center;
+        cursor: pointer;
+        padding: 2px;
+    }
+
+    .divTextSmall {
+        width: 10%;
+        background-color:antiquewhite;
+        border: 2px salmon;
+        margin-left: 1px;
+        margin-top: 1px;
+        float: left;
+        font-size: 20px;
+        line-height: 20px;
+        text-align: center;
+        cursor: pointer;
+        padding: 2px;
+    }
+</style>
+<script src="src.js"></script>
+
+<body style="font-size: 30px;">
+
+    <div class="panel  panel-success" style="padding: 0;">
+        <div class="panel-heading" style="text-align:center;">
+            <h3 class="panel-title">学拼音  
+                 <button id="btn_start" class="btn btn-warning" style="margin-left: 50px;">重新</button>
+                 <button id="btn_start" class="btn btn-warning" style="margin-left: 20px;"
+                  onclick="javascript:window.location.href='index.html';">返回</button></h3>
+            
+        </div>
+
+        <div class="panel-body" style="padding: 0;">
+            <table class="table" style="padding: 0;">
+                <tr>
+                    <td>分数</td>
+                    <td><span id="score" style="color:rgb(239, 13, 13)">0</span></td>
+                    <td>提示</td>
+                    <td><span id="tips" style="color:rgb(239, 13, 13)">0</span></td>
+                    <td>
+                        <select style="font-size: 15px;" id="selectBox4">
+                            <option>提示关</option>
+                            <option>提示开</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+         
+        <div class="panel-body" id="divParentRes" style="width: 100%;">
+            
+        </div>
+
+        <div class="panel-body" id="divParent" style="width: 100%;">
+            
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    (function () {
+        var urlStr=location.href;
+        urlStr=urlStr.split("=")[1];
+
+        document.getElementById("score").innerHTML=window.localStorage.getItem("scroe");
+   
+        
+        var audioList = [];
+        var hasTips = false;
+        //拼音范围
+        var offset = 0;
+        var maxData=7;
+        var nowIndex = 0;
+
+        if(urlStr=="1"){
+            offset = 0;
+            maxData=6;
+            
+        }
+        if(urlStr=="2"){
+            offset = 6;
+            maxData=23;
+        }
+        if(urlStr=="3"){
+            offset = 29;
+            maxData=9;
+        }
+        if(urlStr=="4"){
+            offset = 38;
+            maxData=9;
+        }
+
+
+        
+        var score = 0;
+        var stop = false;
+        var scoreSpan = document.getElementById("score");
+        var imgTop = 0;
+
+        var timeSpan = document.getElementById("timeSpan");
+        var tipsSpan = document.getElementById("tips");
+
+        var divParent = document.getElementById("divParent");
+        var divParentRes = document.getElementById("divParentRes");
+
+        document.getElementById("btn_start").onclick = function () {
+            createAllRandom(maxData);
+        };
+
+
+        $("#selectBox4").change(function(e){
+            var selectVal=$("#selectBox4").val();
+            if(selectVal=="提示开"){
+                hasTips=true;
+            }else{
+                hasTips=false;
+                tipsSpan.innerHTML = "";
+            }
+        });
+
+        function createAudio(srcFile) {
+            var audio = document.createElement("audio");
+            audio.src = "src/" + srcFile;
+            audio.play();
+        }
+
+        //随机排序生成0~maxData
+        function createAllRandom(maxData){
+            var arr=[];
+            for(var i=0;i<maxData;i++){
+                arr.push(i);
+            }
+            var newArr=[];
+            while(arr.length>0 && newArr.length<=maxData){
+                var n=Math.random(arr.length)*arr.length;
+                n=Math.floor(n);
+                newArr.push(arr[n]);
+                arr.splice(n,1);
+            }
+            createAllRandomWords(offset,newArr);
+        }
+
+        //返回带偏移量的拼音
+        function createAllRandomWords(offset,newArr){
+            
+            divParent.innerHTML = "";
+
+            for(var i=0;i<newArr.length;i++){
+                var index=offset+newArr[i];
+                var div = createDiv(audioArray[index], index);
+                divParent.appendChild(div);
+            }
+        }
+
+
+        function createSmallDiv(srcFile){
+            var div = document.createElement("div");
+            div.className = "divTextSmall";//divText
+            div.innerHTML = getWord(srcFile);
+            return div;
+        }
+
+        function createDiv(srcFile, index) {
+            var div = document.createElement("div");
+            div.className = "divText";//divText
+            div.innerHTML = getWord(srcFile);
+            div.onclick = function () {
+                if (index == nowIndex+offset) {
+                    stop = true;
+                    addScore();
+                    createAudio("yes.wav");
+                    var div = createSmallDiv(audioArray[index]);
+                    divParentRes.appendChild(div);
+                    nowIndex++;
+                    stop = false;
+                } 
+            }
+            return div;
+        }
+
+        function getWord(srcFile) {
+            return srcFile.substring(0, srcFile.indexOf("."));
+        }
+
+
+        createAllRandom(maxData);
+
+
+    })();
+
+
+</script>

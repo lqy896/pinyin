@@ -26,12 +26,29 @@
          <div>
             <button class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt1">拼音a-ü</button>
          </div>
+
          <div>
             <button class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt2">拼音b~w</button>
          </div>
 
          <div>
-            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt3">拼音ai~ong</button>
+            <button class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt21">拼音排序b~w</button>
+         </div>
+
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt3">拼音ai~er</button>
+         </div>
+
+         <div>
+            <button class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt32">拼音排序ai~er</button>
+         </div>
+
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt31">拼音an~ong</button>
+         </div>
+
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt33">拼音排序an~ong</button>
          </div>
 
          <div>
@@ -40,6 +57,10 @@
 
          <div>
             <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt5">数学减法</button>
+         </div>
+
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt6">清空今日得分</button>
          </div>
          
       </div>
@@ -66,6 +87,11 @@
          location.href="pinyin.html?t=3";
       });
 
+      $("#bt3").click(function(e){
+         location.href="pinyin.html?t=31";
+      });
+
+
       $("#bt4").click(function(e){
         location.href="shuxue.html?t=4";
       });
@@ -74,6 +100,24 @@
         location.href="shuxue.html?t=5";
       });
 
+      //拼音排序
+      $("#bt21").click(function(e){
+        location.href="paixu.html?t=2";
+      });
+
+            //拼音排序
+     $("#bt32").click(function(e){
+        location.href="paixu.html?t=3";
+      });
+
+                  //拼音排序
+     $("#bt33").click(function(e){
+        location.href="paixu.html?t=4";
+      });
+
+      $("#bt6").click(function(e){
+         window.localStorage.setItem("scroe",0);
+      });
 
 
    })();

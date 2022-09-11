@@ -1,4 +1,3 @@
-
         var audioArray = [
             "a.m4a",
             "o.m4a",
@@ -48,3 +47,41 @@
             "ing.m4a",
             "ong.m4a"
         ];
+
+
+     if (window.localStorage.getItem("scroe") == undefined) {
+          window.localStorage.setItem("scroe",0);
+     }
+
+
+     function addScore() {
+        var scoreSpan = document.getElementById("score");
+        var score = window.localStorage.getItem("scroe");
+        if (score == undefined) {
+            score = 0;
+        }
+        score = Number(score);
+        score += 10;
+        window.localStorage.setItem("scroe", score);
+        scoreSpan.innerHTML = score;
+        
+    }
+
+
+    //成功之后,飘起鲜花
+    function createFlower(){
+        var max=50;
+        var baseW=100;
+        var divArr=[];
+        for(var i=0;i<5;i++){
+            var w=Math.floor(Math.random()*baseW);
+            var div=document.createElement("div");
+            div.innerHTML='<img src="flw.png" width="'+w+'"/>';
+            div.style.position="absolute";
+            div.style.left=Math.floor(Math.random()*500)+"px";
+            div.style.top=Math.floor(Math.random()*20)+"px";
+            divArr.push(div);
+        }
+        return divArr;
+    
+    }

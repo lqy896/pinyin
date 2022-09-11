@@ -35,11 +35,12 @@
 
     <div class="panel  panel-success" style="padding: 0;">
         <div class="panel-heading" style="text-align:center;">
-            <h3 class="panel-title">学拼音  
-                 <button id="btn_start" class="btn btn-warning" style="margin-left: 50px;">下一个</button>
-                 <button id="btn_start" class="btn btn-warning" style="margin-left: 20px;"
-                  onclick="javascript:window.location.href='index.html';">返回</button></h3>
-            
+            <h3 class="panel-title">学拼音
+                <button id="btn_start" class="btn btn-warning" style="margin-left: 50px;">下一个</button>
+                <button id="btn_start" class="btn btn-warning" style="margin-left: 20px;"
+                    onclick="javascript:window.location.href='index.html';">返回</button>
+            </h3>
+
         </div>
 
         <div class="panel-body" style="padding: 0;">
@@ -48,7 +49,7 @@
                     <td>分数</td>
                     <td><span id="score" style="color:rgb(239, 13, 13)">0</span></td>
                     <td>提示</td>
-                    <td><span id="tips" style="color:rgb(239, 13, 13)">0</span></td>
+                    <td><span id="tips" style="color:rgb(239, 13, 13)"></span></td>
                     <td>
                         <select style="font-size: 15px;" id="selectBox4">
                             <option>提示关</option>
@@ -57,11 +58,11 @@
                     </td>
                 </tr>
             </table>
-            
+
         </div>
 
         <div class="panel-body" id="divParent" style="width: 100%;">
-            
+
         </div>
 
     </div>
@@ -75,38 +76,41 @@
 <script type="text/javascript">
 
     (function () {
-        var urlStr=location.href;
-        urlStr=urlStr.split("=")[1];
-        console.log(urlStr);
-        
+        var urlStr = location.href;
+        urlStr = urlStr.split("=")[1];
+
         var audioList = [];
         var hasTips = false;
         //拼音范围
         var start = 6;
         var end = 28;
 
-        if(urlStr=="1"){
+        document.getElementById("score").innerHTML=window.localStorage.getItem("scroe");
+
+        if (urlStr == "1") {
             start = 0;
-            end = 5; 
+            end = 5;
         }
-        if(urlStr=="2"){
+        if (urlStr == "2") {
             start = 6;
-            end = 28; 
+            end = 28;
         }
-        if(urlStr=="3"){
+        if (urlStr == "3") {
             start = 29;
-            end = 46; 
+            end = 37;
+        }
+        if (urlStr == "31") {
+            start = 38;
+            end = 46;
         }
 
         var nowIndex = 0;
-        var score = 0;
-        var stop = false;
-        var scoreSpan = document.getElementById("score");
-        var imgTop = 0;
-        var MAX_COUNT = 8;
 
+        var stop = false;
+
+        var imgTop = 0;
         var timeSpan = document.getElementById("timeSpan");
-        var timeCount = MAX_COUNT;
+
         var tipsSpan = document.getElementById("tips");
 
 
@@ -116,12 +120,12 @@
 
         createDivList();
 
-        $("#selectBox4").change(function(e){
-            var selectVal=$("#selectBox4").val();
-            if(selectVal=="提示开"){
-                hasTips=true;
-            }else{
-                hasTips=false;
+        $("#selectBox4").change(function (e) {
+            var selectVal = $("#selectBox4").val();
+            if (selectVal == "提示开") {
+                hasTips = true;
+            } else {
+                hasTips = false;
                 tipsSpan.innerHTML = "";
             }
         });
@@ -140,24 +144,12 @@
 
                 if (index == nowIndex && !stop) {
                     stop = true;
-                    console.log("答对了");
-                    score += 10;
-                    scoreSpan.innerHTML = score;
-                   // resImg.src = "src/success.jpeg";
-                    timeCount = MAX_COUNT;
-
+                    addScore();
                     createAudio("yes.wav");
-
                     setTimeout(() => {
                         stop = false;
                         createRandom();
                     }, 2600);
-
-                } else if (index != nowIndex) {
-                    scoreSpan.innerHTML = score;
-                   // resImg.src = "src/fail.png";
-                   createAudio("no.wav");
-                   //createAudio(srcFile);
 
                 }
 
@@ -176,7 +168,6 @@
 
             divParent.innerHTML = "";
 
-
             for (var i = start; i <= end; i++) {
                 var div = createDiv(audioArray[i], i);
                 divParent.appendChild(div);
@@ -188,7 +179,6 @@
 
 
         function createRandom() {
-
             var index = Math.floor(Math.random() * (end - start + 1)) + start;
             if (index < start) {
                 index = start
@@ -202,20 +192,8 @@
             createAudio(srcFile);
             if (hasTips) {
                 tipsSpan.innerHTML = getWord(srcFile);
-                console.log(tipsSpan.innerHTML);
             }
         }
-
-        /*setInterval(function () {
-            if (imgTop < 300) {
-                imgTop += 3
-            } else {
-                imgTop = 0;
-                resImg.src = "src/default.png";
-
-            }
-            resImg.style.marginTop = imgTop + "px";
-        }, 40);*/
 
 
     })();
