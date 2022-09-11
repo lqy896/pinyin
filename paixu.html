@@ -18,15 +18,15 @@
     .divText {
         width: 19%;
         background-color: #98FB98;
-        border: 2px salmon;
+        border: 1px salmon;
         margin-left: 1px;
         margin-top: 1px;
         float: left;
-        font-size: 45px;
-        line-height: 90px;
+        font-size: 39px;
+        line-height: 80px;
         text-align: center;
         cursor: pointer;
-        padding: 2px;
+        padding: 1px;
     }
 
     .divTextSmall {
@@ -49,7 +49,7 @@
 
     <div class="panel  panel-success" style="padding: 0;">
         <div class="panel-heading" style="text-align:center;">
-            <h3 class="panel-title">学拼音  
+            <h3 class="panel-title">拼音排序  
                  <button id="btn_start" class="btn btn-warning" style="margin-left: 50px;">重新</button>
                  <button id="btn_start" class="btn btn-warning" style="margin-left: 20px;"
                   onclick="javascript:window.location.href='index.html';">返回</button></h3>
@@ -195,11 +195,12 @@
 
         function createDiv(srcFile, index) {
             var div = document.createElement("div");
-            div.className = "divText";//divText
+            div.className = "divText";
             div.innerHTML = getWord(srcFile);
             div.onclick = function () {
                 if (index == nowIndex+offset) {
                     stop = true;
+                    this.innerHTML='<img src="flw.png" style="width:80%;"/>';
                     addScore();
                     createAudio("yes.wav");
                     var div = createSmallDiv(audioArray[index]);
