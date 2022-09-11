@@ -1,76 +1,49 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 
 <head>
-    <meta charset="utf-8">
+   <title>学习内容选择</title>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
-    <script src="bootstrap/js/jquery.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+   <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+   <script src="bootstrap/js/jquery.js"></script>
+   <script src="bootstrap/js/bootstrap.min.js"></script>
 
 </head>
-<html>
-<style type="text/css">
-    .divText {
-        width: 18%;
-        background-color: #98FB98;
-        border: 1px salmon;
-        margin-left: 2px;
-        margin-top: 2px;
-        float: left;
-        font-size: 60px;
-        line-height: 90px;
-        text-align: center;
-        cursor: pointer;
-    }
-</style>
-<script src="src.js"></script>
 
-<!-- <body style="background: url(tuzhi.png) no-repeat;background-size: 100%;background-attachment: fixed;"> -->
+<body style="font-size: 40px;">
 
-<body style="font-size: 30px;">
+   <div class="panel  panel-success" style="padding: 0;">
+      <div class="panel-heading" style="text-align:center;">
+         <h3>选择学习内容</h3>
+      </div>
 
-    <div class="panel  panel-success" style="padding: 0;">
-        <div class="panel-heading" style="text-align:center;">
-            <h3 class="panel-title">学拼音 <button id="btn_start" class="btn btn-warning" style="margin-left: 50px;">下一个</button></h3>
-            
-        </div>
+      <div class="panel-body" style="padding: 0;">
+         <div>
+            <button class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt1">拼音a-ü</button>
+         </div>
+         <div>
+            <button class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt2">拼音b~w</button>
+         </div>
 
-        <div class="panel-body" style="padding: 0;">
-            <table class="table" style="padding: 0;">
-                <tr>
-                    <td>分数</td>
-                    <td><span id="score" style="color:rgb(239, 13, 13)">0</span></td>
-                    <td>提示</td>
-                    <td><span id="tips" style="color:rgb(239, 13, 13)">0</span></td>
-                </tr>
-            </table>
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt3">拼音ai~ong</button>
+         </div>
 
-            <table class="table" style="padding: 0;">
-                <tr>
-                    <td>b~w</td>
-                    <td><input type="radio" name="select_box" id="selectBox2"></td>
-                    <td>ai~ong</td>
-                    <td><input type="radio" name="select_box" id="selectBox3"></td>
-                    <td>提示</td>
-                    <td>
-                        <input type="radio" name="select_box1" id="selectBox4">
-                    </td>
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt4">数学加法</button>
+         </div>
 
-                </tr>
-            </table>
-            
-        </div>
-
-        <div class="panel-body" id="divParent" style="padding: 1px;margin-left: 15px;margin-right:10px;width: 100%;">
-            
-        </div>
-
-    </div>
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:15px;" id="bt5">数学减法</button>
+         </div>
+         
+      </div>
+   </div>
 
 
 
@@ -79,145 +52,30 @@
 </html>
 
 <script type="text/javascript">
+   (function () {
 
-    (function () {
+    $("#bt1").click(function(e){
+         location.href="pinyin.html?t=1";
+      });
 
-        var audioList = [];
-        var hasTips = false;
-        //拼音范围
-        var start = 6;
-        var end = 28;
+      $("#bt2").click(function(e){
+         location.href="pinyin.html?t=2";
+      });
 
-        var nowIndex = 0;
-        var score = 0;
-        var stop = false;
-        var scoreSpan = document.getElementById("score");
-        var imgTop = 0;
-        var MAX_COUNT = 8;
+      $("#bt3").click(function(e){
+         location.href="pinyin.html?t=3";
+      });
 
-        var timeSpan = document.getElementById("timeSpan");
-        var timeCount = MAX_COUNT;
-        var tipsSpan = document.getElementById("tips");
+      $("#bt4").click(function(e){
+        location.href="shuxue.html?t=4";
+      });
 
-
-        document.getElementById("btn_start").onclick = function () {
-            createRandom();
-        };
+      $("#bt5").click(function(e){
+        location.href="shuxue.html?t=5";
+      });
 
 
-        document.getElementById("selectBox2").onclick = function () {
-            start = 6;
-            end = 28;
-            createDivList();
-            createRandom();
-        };
 
-        document.getElementById("selectBox3").onclick = function () {
-            start = 29;
-            end = 46;
-            createDivList();
-            createRandom();
-        };
-
-        document.getElementById("selectBox4").onclick = function () {
-            hasTips = !hasTips;
-            tipsSpan.innerHTML = "";
-            console.log(hasTips);
-        };
-
-        function createAudio(srcFile) {
-            var audio = document.createElement("audio");
-            audio.src = "src/" + srcFile;
-            audio.play();
-        }
-
-        function createDiv(srcFile, index) {
-            var div = document.createElement("div");
-            div.className = "divText";//divText
-            div.innerHTML = getWord(srcFile);
-            div.onclick = function () {
-
-                if (index == nowIndex && !stop) {
-                    stop = true;
-                    console.log("答对了");
-                    score += 10;
-                    scoreSpan.innerHTML = score;
-                   // resImg.src = "src/success.jpeg";
-                    timeCount = MAX_COUNT;
-
-                    createAudio("yes.wav");
-
-                    setTimeout(() => {
-                        stop = false;
-                        createRandom();
-                    }, 2600);
-
-                } else if (index != nowIndex) {
-                    scoreSpan.innerHTML = score;
-                   // resImg.src = "src/fail.png";
-                   createAudio("no.wav");
-                   //createAudio(srcFile);
-
-                }
-
-            }
-            return div;
-        }
-
-        function getWord(srcFile) {
-            return srcFile.substring(0, srcFile.indexOf("."));
-        }
-
-
-        function createDivList() {
-
-            var divParent = document.getElementById("divParent");
-
-            divParent.innerHTML = "";
-
-
-            for (var i = start; i <= end; i++) {
-                var div = createDiv(audioArray[i], i);
-                divParent.appendChild(div);
-            }
-
-        }
-
-        createDivList();
-
-
-        function createRandom() {
-
-            var index = Math.floor(Math.random() * (end - start + 1)) + start;
-            if (index < start) {
-                index = start
-            }
-            if (index > end) {
-                index = end;
-            }
-            nowIndex = index;
-
-            var srcFile = audioArray[nowIndex];
-            createAudio(srcFile);
-            if (hasTips) {
-                tipsSpan.innerHTML = getWord(srcFile);
-                console.log(tipsSpan.innerHTML);
-            }
-        }
-
-        /*setInterval(function () {
-            if (imgTop < 300) {
-                imgTop += 3
-            } else {
-                imgTop = 0;
-                resImg.src = "src/default.png";
-
-            }
-            resImg.style.marginTop = imgTop + "px";
-        }, 40);*/
-
-
-    })();
-
+   })();
 
 </script>

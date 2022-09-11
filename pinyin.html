@@ -6,7 +6,7 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
- 
+
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
     <script src="bootstrap/js/jquery.js"></script>
@@ -16,67 +16,92 @@
 <html>
 <style type="text/css">
     .divText {
-        width: 130px;
-        height: 120px;
+        width: 19%;
         background-color: #98FB98;
-        border: 1px salmon;
-        margin-left: 10px;
-        margin-top: 10px;
+        border: 2px salmon;
+        margin-left: 1px;
+        margin-top: 1px;
         float: left;
-        font-size: 70px;
-        line-height: 80px;
+        font-size: 45px;
+        line-height: 90px;
         text-align: center;
         cursor: pointer;
+        padding: 2px;
     }
 </style>
 <script src="src.js"></script>
 
-<body>
+<body style="font-size: 30px;">
 
-    <div style="position:absolute;left:20px;top:5px;right:10px;background-color:#FFC0CB;padding:10px;">
-
-
-        <div style="font-size:30px;margin-left:10px;position:relative;width:80%;">
-            分数:<span id="score" style="color:rgb(239, 13, 13)">0</span>
-            提示:---><span style="color:rgb(239, 13, 13);font-size: 50px;" id="tips"></span>
-            <button id="btn_start">开始!</button>
-            <!-- a~ü:<input type="radio" name="select_box" id="selectBox1" />, -->
-            b~w:<input type="radio" name="select_box" id="selectBox2" />,
-            ai~ong:<input type="radio" name="select_box" id="selectBox3" />
-            tips:<input type="radio" name="select_box1" id="selectBox4" />
-
-
+    <div class="panel  panel-success" style="padding: 0;">
+        <div class="panel-heading" style="text-align:center;">
+            <h3 class="panel-title">学拼音  
+                 <button id="btn_start" class="btn btn-warning" style="margin-left: 50px;">下一个</button>
+                 <button id="btn_start" class="btn btn-warning" style="margin-left: 20px;"
+                  onclick="javascript:window.location.href='index.html';">返回</button></h3>
+            
         </div>
 
-
-        <div style="position:absolute;left:80%;top:-10px;width:20%;">
-            <img src="src/default.png" width="100%;" id="resImg" style="margin-top:0px;" />
+        <div class="panel-body" style="padding: 0;">
+            <table class="table" style="padding: 0;">
+                <tr>
+                    <td>分数</td>
+                    <td><span id="score" style="color:rgb(239, 13, 13)">0</span></td>
+                    <td>提示</td>
+                    <td><span id="tips" style="color:rgb(239, 13, 13)">0</span></td>
+                    <td>
+                        <select style="font-size: 15px;" id="selectBox4">
+                            <option>提示关</option>
+                            <option>提示开</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            
         </div>
 
-        <div style="width:80%;left:10px;position:absolute;top:100px;" id="divParent">
+        <div class="panel-body" id="divParent" style="width: 100%;">
+            
         </div>
-
 
     </div>
+
+
 
 </body>
 
 </html>
 
 <script type="text/javascript">
-    (function () {
 
+    (function () {
+        var urlStr=location.href;
+        urlStr=urlStr.split("=")[1];
+        console.log(urlStr);
+        
         var audioList = [];
-        var hasTips = true;
+        var hasTips = false;
         //拼音范围
         var start = 6;
         var end = 28;
+
+        if(urlStr=="1"){
+            start = 0;
+            end = 5; 
+        }
+        if(urlStr=="2"){
+            start = 6;
+            end = 28; 
+        }
+        if(urlStr=="3"){
+            start = 29;
+            end = 46; 
+        }
 
         var nowIndex = 0;
         var score = 0;
         var stop = false;
         var scoreSpan = document.getElementById("score");
-        var resImg = document.getElementById("resImg");
         var imgTop = 0;
         var MAX_COUNT = 8;
 
@@ -89,34 +114,17 @@
             createRandom();
         };
 
-        // document.getElementById("selectBox1").onclick = function () {
-        //     start = 0;
-        //     end = 5;
-        //     createDivList();
-        //     createRandom();
-        // };
+        createDivList();
 
-        document.getElementById("selectBox2").onclick = function () {
-            start = 6;
-            end = 28;
-            createDivList();
-            createRandom();
-        };
-
-        document.getElementById("selectBox3").onclick = function () {
-            start = 29;
-            end = 46;
-            createDivList();
-            createRandom();
-        };
-
-        document.getElementById("selectBox4").onclick = function () {
-            hasTips=!hasTips;
-            tipsSpan.innerHTML="";
-
-        };
-
-
+        $("#selectBox4").change(function(e){
+            var selectVal=$("#selectBox4").val();
+            if(selectVal=="提示开"){
+                hasTips=true;
+            }else{
+                hasTips=false;
+                tipsSpan.innerHTML = "";
+            }
+        });
 
         function createAudio(srcFile) {
             var audio = document.createElement("audio");
@@ -126,7 +134,7 @@
 
         function createDiv(srcFile, index) {
             var div = document.createElement("div");
-            div.className = "divText";
+            div.className = "divText";//divText
             div.innerHTML = getWord(srcFile);
             div.onclick = function () {
 
@@ -135,7 +143,7 @@
                     console.log("答对了");
                     score += 10;
                     scoreSpan.innerHTML = score;
-                    resImg.src = "src/success.jpeg";
+                   // resImg.src = "src/success.jpeg";
                     timeCount = MAX_COUNT;
 
                     createAudio("yes.wav");
@@ -143,17 +151,14 @@
                     setTimeout(() => {
                         stop = false;
                         createRandom();
+                    }, 2600);
 
-                    }, 2500);
-
-                } else if(index != nowIndex ) {
-                    //score-=10;
+                } else if (index != nowIndex) {
                     scoreSpan.innerHTML = score;
-                    resImg.src = "src/fail.png";
-                    if(!stop){
-                        createAudio("no.wav");
-                    }
-                    
+                   // resImg.src = "src/fail.png";
+                   createAudio("no.wav");
+                   //createAudio(srcFile);
+
                 }
 
             }
@@ -169,7 +174,7 @@
 
             var divParent = document.getElementById("divParent");
 
-            divParent.innerHTML="";
+            divParent.innerHTML = "";
 
 
             for (var i = start; i <= end; i++) {
@@ -195,13 +200,13 @@
 
             var srcFile = audioArray[nowIndex];
             createAudio(srcFile);
-            if(hasTips){
+            if (hasTips) {
                 tipsSpan.innerHTML = getWord(srcFile);
+                console.log(tipsSpan.innerHTML);
             }
-        
         }
 
-        setInterval(function () {
+        /*setInterval(function () {
             if (imgTop < 300) {
                 imgTop += 3
             } else {
@@ -210,9 +215,10 @@
 
             }
             resImg.style.marginTop = imgTop + "px";
-        }, 40);
+        }, 40);*/
 
 
     })();
+
 
 </script>
