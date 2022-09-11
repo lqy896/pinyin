@@ -1,0 +1,177 @@
+ <div style="position:absolute;left:20px;top:5px;right:10px;background-color:#FFC0CB;padding:10px;">
+
+
+        <div style="font-size:30px;margin-left:10px;position:relative;width:80%;">
+            分数:<span id="score" style="color:rgb(239, 13, 13)">0</span>
+            提示:---><span style="color:rgb(239, 13, 13);font-size: 50px;" id="tips"></span>
+            <button id="btn_start">开始!</button>
+            <!-- a~ü:<input type="radio" name="select_box" id="selectBox1" />, -->
+            b~w:<input type="radio" name="select_box" id="selectBox2" />,
+            ai~ong:<input type="radio" name="select_box" id="selectBox3" />
+            tips:<input type="radio" name="select_box1" id="selectBox4" />
+
+
+        </div>
+
+
+        <div style="position:absolute;left:80%;top:-10px;width:20%;">
+            <img src="src/default.png" width="100%;" id="resImg" style="margin-top:0px;" />
+        </div>
+
+        <div style="width:80%;left:10px;position:absolute;top:100px;" id="divParent">
+        </div>
+
+
+    </div>
+
+
+       (function () {
+
+        var audioList = [];
+        var hasTips = true;
+        //拼音范围
+        var start = 6;
+        var end = 28;
+
+        var nowIndex = 0;
+        var score = 0;
+        var stop = false;
+        var scoreSpan = document.getElementById("score");
+        var resImg = document.getElementById("resImg");
+        var imgTop = 0;
+        var MAX_COUNT = 8;
+
+        var timeSpan = document.getElementById("timeSpan");
+        var timeCount = MAX_COUNT;
+        var tipsSpan = document.getElementById("tips");
+
+
+        document.getElementById("btn_start").onclick = function () {
+            createRandom();
+        };
+
+        // document.getElementById("selectBox1").onclick = function () {
+        //     start = 0;
+        //     end = 5;
+        //     createDivList();
+        //     createRandom();
+        // };
+
+        document.getElementById("selectBox2").onclick = function () {
+            start = 6;
+            end = 28;
+            createDivList();
+            createRandom();
+        };
+
+        document.getElementById("selectBox3").onclick = function () {
+            start = 29;
+            end = 46;
+            createDivList();
+            createRandom();
+        };
+
+        document.getElementById("selectBox4").onclick = function () {
+            hasTips=!hasTips;
+            tipsSpan.innerHTML="";
+
+        };
+
+
+
+        function createAudio(srcFile) {
+            var audio = document.createElement("audio");
+            audio.src = "src/" + srcFile;
+            audio.play();
+        }
+
+        function createDiv(srcFile, index) {
+            var div = document.createElement("div");
+            div.className = "divText";
+            div.innerHTML = getWord(srcFile);
+            div.onclick = function () {
+
+                if (index == nowIndex && !stop) {
+                    stop = true;
+                    console.log("答对了");
+                    score += 10;
+                    scoreSpan.innerHTML = score;
+                    resImg.src = "src/success.jpeg";
+                    timeCount = MAX_COUNT;
+
+                    createAudio("yes.wav");
+
+                    setTimeout(() => {
+                        stop = false;
+                        createRandom();
+
+                    }, 2500);
+
+                } else if(index != nowIndex ) {
+                    //score-=10;
+                    scoreSpan.innerHTML = score;
+                    resImg.src = "src/fail.png";
+                    if(!stop){
+                        createAudio("no.wav");
+                    }
+                    
+                }
+
+            }
+            return div;
+        }
+
+        function getWord(srcFile) {
+            return srcFile.substring(0, srcFile.indexOf("."));
+        }
+
+
+        function createDivList() {
+
+            var divParent = document.getElementById("divParent");
+
+            divParent.innerHTML="";
+
+
+            for (var i = start; i <= end; i++) {
+                var div = createDiv(audioArray[i], i);
+                divParent.appendChild(div);
+            }
+
+        }
+
+        createDivList();
+
+
+        function createRandom() {
+
+            var index = Math.floor(Math.random() * (end - start + 1)) + start;
+            if (index < start) {
+                index = start
+            }
+            if (index > end) {
+                index = end;
+            }
+            nowIndex = index;
+
+            var srcFile = audioArray[nowIndex];
+            createAudio(srcFile);
+            if(hasTips){
+                tipsSpan.innerHTML = getWord(srcFile);
+            }
+        
+        }
+
+        setInterval(function () {
+            if (imgTop < 300) {
+                imgTop += 3
+            } else {
+                imgTop = 0;
+                resImg.src = "src/default.png";
+
+            }
+            resImg.style.marginTop = imgTop + "px";
+        }, 40);
+
+
+    })();
