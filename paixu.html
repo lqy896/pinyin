@@ -16,6 +16,7 @@
 <html>
 <style type="text/css">
     .divText {
+        position: relative;
         width: 19%;
         background-color: #98FB98;
         border: 1px salmon;
@@ -23,11 +24,12 @@
         margin-top: 1px;
         float: left;
         font-size: 39px;
-        line-height: 80px;
+        line-height: 60px;
         text-align: center;
         cursor: pointer;
         padding: 1px;
     }
+
 
     .divTextSmall {
         width: 10%;
@@ -56,8 +58,8 @@
             
         </div>
 
-        <div class="panel-body" style="padding: 0;">
-            <table class="table" style="padding: 0;">
+        <div class="panel-body" style="padding: 0;margin: 0px;">
+            <table class="table" style="padding: 0;margin: 0px;">
                 <tr>
                     <td>分数</td>
                     <td><span id="score" style="color:rgb(239, 13, 13)">0</span></td>
@@ -74,11 +76,11 @@
             
         </div>
          
-        <div class="panel-body" id="divParentRes" style="width: 100%;">
+        <div class="panel-body" id="divParentRes" style="width: 100%;margin-top: 5px;padding: 0;">
             
         </div>
 
-        <div class="panel-body" id="divParent" style="width: 100%;">
+        <div class="panel-body" id="divParent" style="width: 100%;margin-top: 10px;padding: 0;">
             
         </div>
     </div>
@@ -120,9 +122,13 @@
         }
         if(urlStr=="4"){
             offset = 38;
-            maxData=9;
+            maxData=5;
         }
-
+        
+        if(urlStr=="5"){
+            offset = 43;
+            maxData=4;
+        }
 
         
         var score = 0;
@@ -137,7 +143,8 @@
         var divParentRes = document.getElementById("divParentRes");
 
         document.getElementById("btn_start").onclick = function () {
-            createAllRandom(maxData);
+           // createAllRandom(maxData);
+           location.reload();
         };
 
 
@@ -200,9 +207,11 @@
             div.onclick = function () {
                 if (index == nowIndex+offset) {
                     stop = true;
-                    this.innerHTML='<img src="flw.png" style="width:80%;"/>';
+                    this.style.backgroundColor="#FFB6C1";
+                    //this.innerHTML='<img src="flw.png" style="width:80%;"/>';
                     addScore();
-                    createAudio("yes.wav");
+                    //createAudio("yes.wav");
+                    createAudio(audioArray[index]);
                     var div = createSmallDiv(audioArray[index]);
                     divParentRes.appendChild(div);
                     nowIndex++;
