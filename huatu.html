@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<style>
+    .parent {
+        width: 98%;
+        height: 600px;
+        position: absolute;
+    }
+
+    .div1 {
+        display: flex;
+        width: 100%;
+        position: absolute;
+        z-index: 10;
+    }
+
+    .div2 {
+        margin-left: 1px;
+        width:13%;
+        height: 50px;
+        z-index: 10;
+
+    }
+</style>
+
+
+<body>
+
+    <div class="parent">
+        <div class="div1" id="div01">
+            <div class="div2" id="div02" style="margin-left:10px;border:solid 1px;">
+                清空
+            </div>
+        </div>
+
+        <div id="cdiv" style="position:absolute; left:0;top:0;z-index: 1;width: 100%;">
+           
+        </div>
+    </div>
+
+
+</body>
+
+
+<html>
+
+<script>
+
+    (function () {
+        var width=$("#cdiv").css("width");
+        width=width.substring(0,width.length-2);
+        var height=width*2;
+        console.log(width,height);
+        var cvs=document.createElement("canvas");
+        cvs.width=width;
+        cvs.height=height;
+        document.getElementById("cdiv").appendChild(cvs);
+
+       // var cvs = document.getElementById("cvs");
+        var ctx = cvs.getContext("2d");
+        console.log(ctx);
+
+        var color = "#FF0000";
+        var start = false;
+        var list = [];
+
+        //创建7种颜色
+        var carr = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#8B00FF", "#000000"];
+        var div1 = document.getElementById("div01");
+        for (var i = 0; i < carr.length; i++) {
+            div1.appendChild(creatDom(carr[i]));
+        }
+
+        function creatDom(c) {
+            var div = document.createElement("div");
+            div.className = "div2";
+            div.style.backgroundColor = c;
+            div.onclick = function () {
+                color = c;
+                list=[];
+            }
+            return div;
+        }
+
+        $("#div02").bind("mousedown", function (e) {
+            location.reload();
+        });
+
+
+
+        $("#cdiv").bind("mousemove", function (event) {
+            if (!start) {
+                return;
+            }
+            var x = event.pageX;
+            var y = event.pageY;
+            list.push([x, y]);
+            dropLine();
+        });
+
+
+        $("#cdiv").bind("touchmove", function (event) {
+            event.preventDefault();
+            var x = event.originalEvent.touches[0].clientX;
+            var y = event.originalEvent.touches[0].clientY;
+            list.push([x, y]);
+            //alert(x);
+            dropLine();
+        });
+
+        $("#cdiv").bind('touchend', function (e) {
+            list=[];
+	    });
+
+
+        function dropLine() {
+            if (list.length == 0) {
+                return;
+            }
+            if (list.length == 2) {
+                ctx.beginPath();
+                //弹出第一个
+                var p1 = list[0];
+                var p2 = list[1];
+                ctx.moveTo(p1[0], p1[1]);
+                ctx.lineTo(p2[0], p2[1]);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 5;
+                ctx.stroke();
+                console.log(list);
+                list.shift();
+                ctx.closePath();
+            }
+        }
+
+    })();
+
+</script>
