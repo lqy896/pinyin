@@ -22,7 +22,7 @@
         margin-left: 1px;
         margin-top: 1px;
         float: left;
-        font-size: 39px;
+        font-size: 36px;
         line-height: 80px;
         text-align: center;
         cursor: pointer;
@@ -149,12 +149,13 @@
 
                 if (index == nowIndex && !stop) {
                     stop = true;
+                    this.style.backgroundColor="#FFB6C1";
                     addScore();
-                    createAudio("yes.wav");
+                    //createAudio("yes.wav");
                     setTimeout(() => {
                         stop = false;
                         createRandom();
-                    }, 2600);
+                    }, 1000);
 
                 }
 
