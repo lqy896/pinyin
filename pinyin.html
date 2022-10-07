@@ -101,11 +101,6 @@
         }
         if (urlStr == "31") {
             start = 38;
-            end = 42;
-        }
-
-        if (urlStr == "32") {
-            start = 43;
             end = 46;
         }
 
@@ -145,7 +140,8 @@
             var div = document.createElement("div");
             div.className = "divText";//divText
             div.innerHTML = getWord(srcFile);
-            div.onclick = function () {
+           // div.onclick = function () {
+            div.ontouchstart=function () {
 
                 if (index == nowIndex && !stop) {
                     stop = true;

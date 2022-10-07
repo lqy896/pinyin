@@ -110,8 +110,8 @@
         if(urlStr=="1"){
             offset = 0;
             maxData=6;
-            
         }
+
         if(urlStr=="2"){
             offset = 6;
             maxData=23;
@@ -122,12 +122,7 @@
         }
         if(urlStr=="4"){
             offset = 38;
-            maxData=5;
-        }
-        
-        if(urlStr=="5"){
-            offset = 43;
-            maxData=4;
+            maxData=9;
         }
 
         
@@ -143,7 +138,6 @@
         var divParentRes = document.getElementById("divParentRes");
 
         document.getElementById("btn_start").onclick = function () {
-           // createAllRandom(maxData);
            location.reload();
         };
 
@@ -204,13 +198,12 @@
             var div = document.createElement("div");
             div.className = "divText";
             div.innerHTML = getWord(srcFile);
-            div.onclick = function () {
+             //div.onclick = function () {
+             div.ontouchstart=function () {
                 if (index == nowIndex+offset) {
                     stop = true;
                     this.style.backgroundColor="#FFB6C1";
-                    //this.innerHTML='<img src="flw.png" style="width:80%;"/>';
                     addScore();
-                    //createAudio("yes.wav");
                     createAudio(audioArray[index]);
                     var div = createSmallDiv(audioArray[index]);
                     divParentRes.appendChild(div);

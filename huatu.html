@@ -42,7 +42,7 @@
     <div class="parent">
         <div class="div1" id="div01">
             <div class="div2" id="div02" style="margin-left:10px;border:solid 1px;">
-                清空
+                橡皮
             </div>
         </div>
 
@@ -71,11 +71,11 @@
 
        // var cvs = document.getElementById("cvs");
         var ctx = cvs.getContext("2d");
-        console.log(ctx);
-
+       
         var color = "#FF0000";
         var start = false;
         var list = [];
+        var lineWidth=5;
 
         //创建7种颜色
         var carr = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#8B00FF", "#000000","#fdb2ce"];
@@ -88,15 +88,17 @@
             var div = document.createElement("div");
             div.className = "div2";
             div.style.backgroundColor = c;
-            div.onclick = function () {
+            div.ontouchstart=function () {
                 color = c;
                 list=[];
+                lineWidth=5;
             }
             return div;
         }
 
-        $("#div02").bind("mousedown", function (e) {
-            location.reload();
+        $("#div02").bind("touchstart", function (e) {
+            color="#ffffff";
+            lineWidth=50;
         });
 
 
@@ -138,7 +140,7 @@
                 ctx.moveTo(p1[0], p1[1]);
                 ctx.lineTo(p2[0], p2[1]);
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 5;
+                ctx.lineWidth = lineWidth;
                 ctx.stroke();
                 console.log(list);
                 list.shift();
