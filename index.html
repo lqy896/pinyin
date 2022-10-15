@@ -24,42 +24,46 @@
 
       <div class="panel-body" style="padding: 0;">
          <div>
-            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt1">拼音a-ü</button>
+            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="pinyin_bt1">拼音a-ü</button>
          </div>
 
          <div>
-            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt2">拼音b~w</button>
+            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="pinyin_bt2">拼音b~w</button>
+         </div>
+
+         
+         <div>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="pinyin_bt3">拼音ai~ong</button>
          </div>
 
          <div>
-            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt21">拼音排序b~w</button>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="pinyin_bt4">拼音zhi~ying</button>
          </div>
 
          <div>
-            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt3">拼音ai~er</button>
+            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="paixu_bt2">拼音排序b~w</button>
+         </div>
+
+
+         <div>
+            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="paixu_bt3">拼音排序ai~ong</button>
          </div>
 
          <div>
-            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt32">拼音排序ai~er</button>
+            <button class="btn btn-warning" style="width: 100%;margin-top:2px;" id="paixu_bt4">拼音排序zhi~ying</button>
          </div>
 
-         <div>
-            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt31">拼音an~ong</button>
-         </div>
 
-         <div>
-            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt33">拼音排序an~ong</button>
-         </div>
 
 
          </div>
 
          <div>
-            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt4">数学加法</button>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="shuxue_bt1">数学加法</button>
          </div>
 
          <div>
-            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="bt5">数学减法</button>
+            <button  class="btn btn-warning" style="width: 100%;margin-top:2px;" id="shuxue_bt2">数学减法</button>
          </div>
 
          <div>
@@ -82,48 +86,53 @@
 <script type="text/javascript">
    (function () {
 
-    $("#bt1").click(function(e){
+    $("#pinyin_bt1").click(function(e){
          location.href="pinyin.html?t=1";
       });
 
-      $("#bt2").click(function(e){
+      $("#pinyin_bt2").click(function(e){
          location.href="pinyin.html?t=2";
       });
 
-      $("#bt3").click(function(e){
+      $("#pinyin_bt3").click(function(e){
          location.href="pinyin.html?t=3";
       });
 
-      $("#bt31").click(function(e){
-         location.href="pinyin.html?t=31";
+      $("#pinyin_bt4").click(function(e){
+         location.href="pinyin.html?t=4";
       });
 
-
-      $("#bt4").click(function(e){
-        location.href="shuxue.html?t=4";
-      });
-
-      $("#bt5").click(function(e){
-        location.href="shuxue.html?t=5";
-      });
 
       //拼音排序
-      $("#bt21").click(function(e){
+      $("#paixu_bt2").click(function(e){
         location.href="paixu.html?t=2";
       });
 
       //拼音排序
-      $("#bt32").click(function(e){
+      $("#paixu_bt3").click(function(e){
         location.href="paixu.html?t=3";
       });
 
-      //拼音排序
-
-      $("#bt33").click(function(e){
-         location.href="paixu.html?t=4";
-      });
       
+      //拼音排序
+      $("#paixu_bt4").click(function(e){
+        location.href="paixu.html?t=4";
+      });
 
+
+
+
+
+      
+      $("#shuxue_bt1").click(function(e){
+        location.href="shuxue.html?t=4";
+      });
+
+      $("#shuxue_bt2").click(function(e){
+        location.href="shuxue.html?t=5";
+      });
+
+      
 
       $("#bt6").click(function(e){
          window.localStorage.setItem("scroe",0);

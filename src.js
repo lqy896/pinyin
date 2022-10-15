@@ -45,7 +45,23 @@
             "ang.mp3",
             "eng.mp3",
             "ing.mp3",
-            "ong.mp3"
+            "ong.mp3",
+            "zhi.mp3",
+            "chi.mp3",
+            "shi.mp3",
+            "ri.mp3",
+            "zi.mp3",
+            "ci.mp3",
+            "si.mp3",
+            "yi.mp3",
+            "wu.mp3",
+            "yu.mp3",
+            "ye.mp3",
+            "yue.mp3",
+            "yuan.mp3",
+            "yin.mp3",
+            "yun.mp3",
+            "ying.mp3"
         ];
 
 
