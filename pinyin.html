@@ -87,6 +87,9 @@
 
         document.getElementById("score").innerHTML=window.localStorage.getItem("scroe");
 
+        //已经被改变颜色的对象
+        var hasChangeObj=null;
+
         if (urlStr == "1") {
             start = 0;
             end = 5;
@@ -145,9 +148,12 @@
 
                 if (index == nowIndex && !stop) {
                     stop = true;
+                    if(hasChangeObj){
+                        hasChangeObj.style.backgroundColor="#98FB98";
+                    }
                     this.style.backgroundColor="#FFB6C1";
+                    hasChangeObj=this;
                     addScore();
-                    //createAudio("yes.wav");
                     setTimeout(() => {
                         stop = false;
                         createRandom();

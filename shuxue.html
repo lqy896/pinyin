@@ -155,7 +155,7 @@
         var data3 = 2;
         var calRes = 0;
         var max = 9;
-        var min = 2;
+        var min = 1;
 
         document.getElementById("score").innerHTML = window.localStorage.getItem("scroe");
 
@@ -191,13 +191,12 @@
             var d2 = 0;
             //加法
             if (addition) {
-                d1 = Math.floor(Math.random() * (max - min + 1)) + min;
-                d2 = Math.floor(Math.random() * (max - min + 1)) + min;
-                // d2=getDataMin10(d1);
+                d1 = Math.floor(Math.random() * (max - min + 1))+1;
+                d2 = Math.floor(Math.random() * (max - min + 1))+1;
                 return [d1, d2, d1 + d2];
             } else {
-                d1 = Math.floor(Math.random() * (max - 4 + 1)) + 4;
-                d2 = Math.floor(Math.random() * (d1 - 1 + 1)) + 1;
+                d1 = Math.floor(Math.random() * (max+1))+2;
+                d2 = Math.floor(Math.random() * (d1+1))+1;
                 return [d1, d2, d1 - d2];
             }
         }
