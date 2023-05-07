@@ -84,6 +84,13 @@
     }
 
 
+    function createAudio(srcFile) {
+        var audio = document.createElement("audio");
+        audio.src = "src/" + srcFile;
+        audio.play();
+    }
+
+
     //成功之后,飘起鲜花
     function createFlower(){
         var max=50;

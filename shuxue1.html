@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+<html>
+<style type="text/css">
+    .box1 {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .box4 {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        font-size: 25px;
+    }
+
+    .box2 {
+        background-color: #98FB98;
+        height: 80px;
+        margin: 10px auto;
+        flex-grow: 1;
+        line-height: 80px;
+        text-align: center;
+    }
+
+
+    .box6 {
+        background-color: #98FB98;
+        height: 50px;
+        margin: 10px;
+        flex-grow: 1;
+        line-height: 50px;
+        text-align: center;
+    }
+
+
+    .box7 {
+        background-color: #98FB98;
+        height: 50px;
+        margin: 10px;
+        flex-grow: 2;
+        line-height: 50px;
+        text-align: center;
+    }
+
+
+    .box3 {
+        background-color: #EE82EE;
+        height: 80px;
+        margin: 10px auto;
+        flex-grow: 1;
+        line-height: 80px;
+        text-align: center;
+    }
+
+    .box5 {
+        background-color: #9370DB;
+        height: 50px;
+        width: 50px;
+        margin: 2px;
+        flex-grow: 1;
+        line-height: 50px;
+        text-align: center;
+        font-size: 20;
+    }
+
+    .div1 {
+        font-size: 25px;
+    }
+</style>
+<script src="src.js"></script>
+
+<body style="font-size: 30px;">
+
+    <div style="position: absolute;left: 20px; right:20px; top:10px;">
+
+        <div>分数：<span  id="score"></span></div>
+        <div class="box1">
+            <div class="box2" id="data1"></div>
+            <div style="height: 100px;line-height: 100px;">+</div>
+            <div class="box2" id="data2"></div>
+        </div>
+
+        <div class="box1">
+            <div class="box3" id="boxRes1"></div>
+            <div style="height: 100px;line-height: 100px;">+</div>
+            <div class="box3" id="boxRes2"></div>
+            <div style="height: 100px;line-height: 100px;">+</div>
+            <div class="box3" id="boxRes3"></div>
+            <div style="height: 100px;line-height: 100px;">+</div>
+            <div class="box3" id="boxRes4"></div>
+
+        </div>
+
+        <div class="div1">
+            输入: <span id="calRes" style="margin:20px;font-size: 25px;color: #9370DB;"></span>
+        </div>
+
+        <div class="box4" id="cal_div1">
+
+        </div>
+
+        <div class="box4" id="cal_div2">
+        </div>
+
+        <div class="box1" style="margin-top: 30px;">
+            <div class="box6" onclick="reSet()">
+                重新
+            </div>
+            <div class="box7" onclick="calResFun()">
+                确认
+            </div>
+        </div>
+
+
+
+    </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    var data1 = 0;
+    var data2 = 0;
+    var d1 = 0;
+    var d2 = 0;
+    var d3 = 0;
+    var max = 12;
+    var calRes = 0;
+    var index = 1;
+
+    document.getElementById("score").innerHTML = window.localStorage.getItem("scroe");
+
+    function createTwoData() {
+        //加法
+        d1 = Math.floor(Math.random() * max)+2;
+        d2 = Math.floor(Math.random() * max)+1;
+        d3 = d1 + d2;
+        if(d2>d1){
+            $("#data1").html(d2);
+            $("#data2").html(d1);
+        }else{
+            $("#data1").html(d1);
+            $("#data2").html(d2)
+        }
+    }
+
+    for (var i = 0; i < 10; i++) {
+        creatDiv(i);
+    }
+
+    function creatDiv(i) {
+        var cal_div1 = document.getElementById("cal_div1");
+        var cal_div2 = document.getElementById("cal_div2");
+        var div = document.createElement("div");
+        div.className = "box5";
+        div.innerHTML = i + "";
+
+        if (i <= 4) {
+            cal_div1.appendChild(div);
+        } else {
+            cal_div2.appendChild(div);
+        }
+        div.onclick = function () {
+            calRes = calRes * 10 + i;
+            $("#calRes").html(calRes);
+        }
+    }
+
+
+    function calResFun() {
+        var id = "#boxRes" + index;
+        index++;
+        if (calRes > 0) {
+            $(id).html(calRes);
+            calRes = 0;
+            $("#calRes").html("");
+            checkRes();
+        }
+    }
+
+    function checkRes() {
+        var sum = 0;
+        for (var i = 1; i <= 4; i++) {
+            var id = "#boxRes" + i;
+            var r = $(id).html()
+            r = parseInt(r);
+            if (!isNaN(r)) {
+                sum += r;
+            }
+            if (sum == d3) {
+                youRight();
+            }
+        }
+    }
+
+    function youRight() {
+        addScore();
+        createAudio("yes.wav");
+        setTimeout(() => {
+            reSet();
+            createTwoData();
+        }, 2800);
+    }
+
+
+    function reSet() {
+        index = 1;
+        calRes = 0;
+        for (var i = 1; i <= 4; i++) {
+            $("#boxRes" + i).html("");
+        }
+    }
+
+    createTwoData();
+
+</script>
