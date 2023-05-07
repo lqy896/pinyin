@@ -15,6 +15,7 @@
     .box1 {
         display: flex;
         justify-content: flex-start;
+        margin-bottom: 10px;
     }
 
     .box4 {
@@ -84,26 +85,28 @@
 
     <div style="position: absolute;left: 20px; right:20px; top:10px;">
 
-        <div>分数：<span  id="score"></span></div>
+        <div>分数：<span  id="score"></span> &nbsp; <a href="#" onclick="javascript:window.location.href='index.html';">返回</a></div>
         <div class="box1">
             <div class="box2" id="data1"></div>
             <div style="height: 100px;line-height: 100px;">+</div>
             <div class="box2" id="data2"></div>
+            <div style="height: 100px;line-height: 100px;">=</div>
+            <div class="box2" id="data3" onclick="setResult()"></div>
         </div>
 
         <div class="box1">
-            <div class="box3" id="boxRes1"></div>
+            <div class="box3" id="boxRes1" onClick="splitData()"></div>
             <div style="height: 100px;line-height: 100px;">+</div>
-            <div class="box3" id="boxRes2"></div>
+            <div class="box3" id="boxRes2" onClick="splitData()"></div>
             <div style="height: 100px;line-height: 100px;">+</div>
-            <div class="box3" id="boxRes3"></div>
+            <div class="box3" id="boxRes3" onClick="splitData()"></div>
             <div style="height: 100px;line-height: 100px;">+</div>
-            <div class="box3" id="boxRes4"></div>
+            <div class="box3" id="boxRes4" onClick="splitData()"></div>
 
         </div>
 
         <div class="div1">
-            输入: <span id="calRes" style="margin:20px;font-size: 25px;color: #9370DB;"></span>
+            输入: <span id="inputRes" style="margin:20px;font-size: 25px;color: #9370DB;"></span>
         </div>
 
         <div class="box4" id="cal_div1">
@@ -115,14 +118,9 @@
 
         <div class="box1" style="margin-top: 30px;">
             <div class="box6" onclick="reSet()">
-                重新
-            </div>
-            <div class="box7" onclick="calResFun()">
-                确认
+                重新开始
             </div>
         </div>
-
-
 
     </div>
 
@@ -137,15 +135,21 @@
     var d2 = 0;
     var d3 = 0;
     var max = 12;
-    var calRes = 0;
+    var inputRes = 0;
     var index = 1;
 
     document.getElementById("score").innerHTML = window.localStorage.getItem("scroe");
 
     function createTwoData() {
         //加法
-        d1 = Math.floor(Math.random() * max)+2;
-        d2 = Math.floor(Math.random() * max)+1;
+        d1 = Math.floor(Math.random() * max)+1;
+        d2 = Math.floor(Math.random() * 9)+1;
+        if(d1<4){
+            d1=d1+5;
+        }
+        if(d2<3){
+            d2=d2+3;
+        }
         d3 = d1 + d2;
         if(d2>d1){
             $("#data1").html(d2);
@@ -154,11 +158,15 @@
             $("#data1").html(d1);
             $("#data2").html(d2)
         }
+        $("#data3").html("")
+        $("#data3").css("background-color","#98FB98");
     }
 
     for (var i = 0; i < 10; i++) {
         creatDiv(i);
     }
+
+    setBoxColor(1);
 
     function creatDiv(i) {
         var cal_div1 = document.getElementById("cal_div1");
@@ -173,24 +181,27 @@
             cal_div2.appendChild(div);
         }
         div.onclick = function () {
-            calRes = calRes * 10 + i;
-            $("#calRes").html(calRes);
+            inputRes = inputRes * 10 + i;
+            $("#inputRes").html(inputRes);
         }
     }
 
-
-    function calResFun() {
+    // 拆分数据
+    function splitData() {
         var id = "#boxRes" + index;
-        index++;
-        if (calRes > 0) {
-            $(id).html(calRes);
-            calRes = 0;
-            $("#calRes").html("");
-            checkRes();
+        if (inputRes > 0) {
+            resetColor();
+            index++;
+            setBoxColor(index);
+            $(id).html(inputRes);
+            inputRes = 0;
+            $("#inputRes").html("");
         }
     }
 
-    function checkRes() {
+     
+    //检查结果
+    function getSplitResSum() {
         var sum = 0;
         for (var i = 1; i <= 4; i++) {
             var id = "#boxRes" + i;
@@ -199,14 +210,13 @@
             if (!isNaN(r)) {
                 sum += r;
             }
-            if (sum == d3) {
-                youRight();
-            }
         }
+        return sum;
     }
 
     function youRight() {
         addScore();
+        $("#data3").html(d3);
         createAudio("yes.wav");
         setTimeout(() => {
             reSet();
@@ -217,10 +227,33 @@
 
     function reSet() {
         index = 1;
-        calRes = 0;
+        inputRes = 0;
         for (var i = 1; i <= 4; i++) {
             $("#boxRes" + i).html("");
         }
+        resetColor();
+        setBoxColor(index);
+        $("#inputRes").html("");
+        $("#data3").html("");
+        $("#data3").css("background-color","#98FB98");
+    }
+
+    function resetColor(){
+        for (var i = 1; i <= 4; i++) {
+            $("#boxRes" + i).css("background-color","#98FB98");
+        }
+    }
+
+    function setBoxColor(a){
+        $("#boxRes" + a).css("background-color","#6495ED");
+    }
+    
+    function setResult(){
+       $("#data3").html(inputRes);
+       $("#data3").css("background-color","#6495ED");
+       if(inputRes==d3){
+         youRight();
+       }
     }
 
     createTwoData();
