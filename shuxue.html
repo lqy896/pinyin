@@ -43,17 +43,18 @@
         display: inline-block;
     }
 
-    .tipsData {
-        width: 47%;
-        background-color: antiquewhite;
+    .divData1 {
+        width: 15%;
+        background-color: rgb(72, 138, 116);
         border: 2px salmon;
-        margin-left: 0px;
-        margin-top: 0px;
-        font-size: 13px;
-        line-height: 10px;
+        margin-left: 1px;
+        margin-top: 1px;
+        font-size: 40px;
+        /* line-height: 90px; */
         text-align: center;
         cursor: pointer;
-        padding: 0px;
+        padding: 2px;
+        height: 90px;
         display: inline-block;
     }
 </style>
@@ -66,6 +67,9 @@
             <h3 class="panel-title">学数学 <span id="func">加法</span>
                 <button class="btn btn-warning" style="margin-left: 20px;"
                     onclick="javascript:window.location.href='index.html';">返回</button>
+
+                <button class="btn btn-warning" style="margin-left: 20px;" id="swapFun">交换</button>
+                <button class="btn btn-warning" style="margin-left: 20px;" id="setMax">增加</button>
             </h3>
 
         </div>
@@ -75,18 +79,12 @@
                 <tr>
                     <td>分数</td>
                     <td><span id="score" style="color:rgb(239, 13, 13)">0</span></td>
-                    <td>
-                        <select style="font-size: 15px;" id="selectBox4">
-                            <option>提示关</option>
-                            <option>提示开</option>
-                        </select>
-                    </td>
                 </tr>
             </table>
 
         </div>
 
-        <div class="panel-body" id="divParent" style="width: 100%; display: inline-block;padding: 0;">
+        <div id="divParent" style="width: 100%; display: inline-block;padding: 0;">
 
             <div class="divData" id="data1">
 
@@ -110,15 +108,40 @@
 
         </div>
 
-        <div class="panel-body" style="width: 100%;padding: 0;">
+        <div style="width: 100%; display: inline-block;padding: 0;">
 
-            <div id="tips1" class="tipsData">
+            <div class="divData1" id="tips1">
+
+            </div>
+
+            <div style="display: inline-block;font-size: 30px;">
+                <span id="func1">+</span>
+            </div>
+
+            <div class="divData1" id="tips2">
 
             </div>
 
-            <div id="tips2" class="tipsData">
+            <div style="display: inline-block;font-size: 30px;">
+                <span id="func1">+</span>
+            </div>
+
+            <div class="divData1" id="tips3">
+  
+            </div>
+
+            <div style="display: inline-block;font-size: 30px;">
+                <span id="func1">+</span>
+            </div>
+
+            <div class="divData1" id="tips4">
 
             </div>
+
+        </div>
+
+
+        <div style="width: 100%;height : 20px;">
 
         </div>
 
@@ -147,16 +170,14 @@
         var urlStr = location.href;
         urlStr = urlStr.split("=")[1];
 
-        var hasTips = true;
-
         var addition = true;
         var data1 = 3;
         var data2 = 2;
         var data3 = 2;
         var calRes = 0;
-        var max = 9;
-        var min = 1;
-
+        var max = 12;
+        var swap = true;
+        var toId = "tpis1";
         document.getElementById("score").innerHTML = window.localStorage.getItem("scroe");
 
         if (urlStr == "5") {
@@ -166,37 +187,28 @@
         }
 
 
-        $("#selectBox4").change(function (e) {
-            var selectVal = $("#selectBox4").val();
-            if (selectVal == "提示开") {
-                hasTips = true;
-            } else {
-                hasTips = false;
-                $("#tips1").html("");
-                $("#tips2").html("");
-            }
+        $("#swapFun").click(function () {
+            swap = ~swap;
         });
 
-        function getDataMin10(d1) {
-            while (true) {
-                d2 = Math.floor(Math.random() * (max - min + 1)) + min;
-                if (d1 + d2 < 11) {
-                    return d2;
-                }
-            }
-        }
+        $("#setMax").click(function () {
+            max += 10;
+        });
 
         function createTwoData() {
             var d1 = 0;
             var d2 = 0;
             //加法
             if (addition) {
-                d1 = Math.floor(Math.random() * (max - min + 1))+1;
-                d2 = Math.floor(Math.random() * (max - min + 1))+1;
+                d1 = Math.floor(Math.random() * max) + 3;
+                d2 = Math.floor(Math.random() * max) + 3;
+                if (d2 > d1 && swap) {
+                    return [d2, d1, d1 + d2];
+                }
                 return [d1, d2, d1 + d2];
             } else {
-                d1 = Math.floor(Math.random() * (max+1))+2;
-                d2 = Math.floor(Math.random() * (d1+1))+1;
+                d1 = Math.floor(Math.random() * max) + 3;
+                d2 = Math.floor(Math.random() * d1) + 1;
                 return [d1, d2, d1 - d2];
             }
         }
@@ -204,7 +216,7 @@
         createOne();
 
         $("#btn_start").click(function (e) {
-            createOne();
+            window.location.reload();
         });
 
         function createOne() {
@@ -216,31 +228,47 @@
             $("#data1").html(data1);
             $("#data2").html(data2);
             $("#data3").html("&nbsp;");
-
-            if (hasTips) {
-                createTips("tips1", data1);
-                createTips("tips2", data2);
-            }
-        }
-
-        function createTips(divId, ct) {
-            var str = "";
-            for (var i = 0; i < ct; i++) {
-                str += "❤"
-            }
-            $("#" + divId).html(str);
         }
 
 
-        function yorRight() {
+        function youRight() {
             addScore();
             createAudio("yes.wav");
 
             setTimeout(() => {
                 stop = false;
-                createOne();
+                window.location.reload();
             }, 2600);
         }
+
+
+        function setToId(a) {
+            toId = a;
+        }
+
+        function clearData(a) {
+           $("#" + a).html("");
+           calRes=0;
+            $("#" + a).css("background-color","#cdcdff");
+
+        }
+
+        $("#tips1").click(function () {
+            toId = "tips1";
+            clearData("tips1");
+        });
+        $("#tips2").click(function () {
+            toId = "tips2";
+            clearData("tips2");
+        });
+        $("#tips3").click(function () {
+            toId = "tips3";
+            clearData("tips3");
+        });
+        $("#tips4").click(function () {
+            toId = "tips4";
+            clearData("tips4");
+        });
 
 
         function createAudio(srcFile) {
@@ -248,12 +276,6 @@
             audio.src = "src/" + srcFile;
             audio.play();
         }
-
-
-        $("#data3").click(function (e) {
-            calRes = 0;
-            $("#data3").html("&nbsp;");
-        });
 
 
         var divParent = document.getElementById("dataParent");
@@ -265,13 +287,25 @@
             div.onclick = function () {
                 calRes = calRes * 10;
                 calRes = calRes + index;
-                $("#data3").html(calRes);
-                if (calRes == data3) {
-                    yorRight();
+
+                $("#" + toId).html(calRes);
+                var a = getDataFromDiv("tips1") + getDataFromDiv("tips2") + getDataFromDiv("tips3") + getDataFromDiv("tips4");
+                console.log("求和："+a + "  "+data3);
+                if (a == data3) {
+                    $("#data3").html(a);
+                    youRight();
                 }
 
             }
             divParent.appendChild(div);
+        }
+
+        function getDataFromDiv(a) {
+            var b = $("#" + a).html();
+            if (isNaN(parseInt(b))) {
+                return 0;
+            }
+            return parseInt(b);
         }
 
         function createAllData() {
