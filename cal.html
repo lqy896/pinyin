@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>数学计算</title>
+
+<style type="text/css">
+   html body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+   }
+
+   .fullScreen {
+      margin: 0;
+      background-color: aliceblue;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: start;
+      flex-direction: column;
+   }
+
+   .big-font {
+      margin-top: 80px;
+      margin-bottom: 10px;
+      font-size: 120px;
+      color: brown;
+      display: flex;
+      justify-content: center;
+   }
+
+   .content-box {
+      font-size: 80px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+   }
+
+   .content-box1 {
+      font-size: 80px;
+      margin-top: 10px;
+      display: flex;
+      margin: 30px;
+      color: blueviolet;
+      justify-content: center;
+      flex-direction: row;
+   }
+
+   .content0 {
+      display: inline-flex;
+      font-size: 80px;
+      margin: 5px;
+      color: green;
+      justify-content: center;
+      /* flex: auto; */
+   }
+
+   .content1 {
+      width: 125px;
+      display: inline-flex;
+      font-size: 80px;
+      margin: 5px;
+      color: green;
+      justify-content: center;
+      /* flex: auto; */
+   }
+
+
+   .my-input {
+      width: 50%;
+      height: 120px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      font-size: 100px;
+      padding-left: 50px;
+      padding-right: 50px;
+      background-color: aquamarine;
+      overflow: hidden;
+      max-lines: 1;
+   }
+
+   .my-btn {
+      width: 60%;
+      height: 150px;
+      border: none;
+      background-color: cyan;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      font-size: 100px;
+      padding-left: 50px;
+      padding-right: 50px;
+
+   }
+
+   input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type=number] {
+      -moz-appearance: textfield;
+   }
+</style>
+<script src="src.js"></script>
+<body>
+   <div class="fullScreen">
+
+      <div class="content-box" style="color: red;">
+         口算大挑战
+      </div>
+
+      <div class="content-box" style="margin-top: 100px;">
+
+         <div class="content0" style="color:red">
+            得分：
+         </div>
+         <div class="content1" id="divScore" style="color: red;">
+         </div>
+
+         <div class="content0" style="color: red;">
+            准度：
+         </div>
+
+         <div class="content1" id="divRate" style="color: red;">
+
+         </div>
+
+      </div>
+
+      <div id="div1" style="margin-top: 50px;">
+
+         <div class="content-box">
+            <div class="content1" id="divData1"></div>
+            <div class="content1" id="divType"></div>
+            <div class="content1" id="divData2"></div>
+            <div class="content1">=</div>
+            <div class="content1" id="divAnswer1"></div>
+         </div>
+
+         <div class="content-box">
+            <input type="number" class="my-input" id="dataAnswer1" />
+         </div>
+
+         <div class="content-box" style="margin-top: 60px;">
+            <button class="my-btn" id="submitBtn1">口算提交</button>
+         </div>
+
+      </div>
+
+
+
+      <div id="div2" style="margin-top: 50px;">
+
+         <div class="content-box1" id="divIssue1" style="margin-top: 50px;">
+
+         </div>
+
+         <div class="content-box">
+            <input type="number" class="my-input" id="dataAnswer2" />
+         </div>
+
+         <div class="content-box">
+            <button class="my-btn" id="submitBtn2" style="margin-top: 60px;">答应用题</button>
+         </div>
+
+      </div>
+
+
+   </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+   (function () {
+
+      var issue1 = "我吃掉#个苹果,妈妈又给了我#个，我现在有#个，那我原来有几个？";
+      var issue1Str = issue1.split("#");
+      var issue1Data = [];
+      var issue1Asw = 0;
+
+      var date = new Date();
+      var key = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      var data1 = 0;
+      var data2 = 0;
+      var type = 0;
+      var answer1 = 0;
+      var total = 0;
+
+      var score = window.localStorage.getItem("scroe");
+      var total = window.localStorage.getItem("total");
+      var scoreKey = window.localStorage.getItem("scoreKey");
+
+      if (!score) {
+         window.localStorage.setItem("total", 0);
+         window.localStorage.setItem("scroe", 0);
+         window.localStorage.setItem("scoreKey", key);
+      } else if (window.localStorage.getItem("scoreKey") != key) {
+         window.localStorage.setItem("total", 0);
+         window.localStorage.setItem("scroe", 0);
+         window.localStorage.setItem("scoreKey", key);
+         score = 0;
+         total = 0;
+      }
+
+      document.getElementById("divScore").innerHTML = score;
+      if (total == 0) {
+         document.getElementById("divRate").innerHTML = "0";
+      } else {
+         document.getElementById("divRate").innerHTML = ((score / total) * 100.0).toFixed(1);
+      }
+
+      console.log(key);
+      console.log(score);
+
+      getNewData();
+
+
+      function getNewData1() {
+         type = (Math.random() > 0.5) ? 0 : 1;
+         //加法
+         if (type == 0) {
+            data1 = Math.ceil(Math.random() * 20);
+            if (data1 < 8) {
+               data1 += 3;
+            }
+            data2 = Math.ceil(Math.random() * (20 - data1));
+            if (data2 < 3) {
+               data2 += 3;
+            }
+            answer1 = data1 + data2;
+         } else {
+            data1 = Math.ceil(Math.random() * 20);
+            if (data1 < 8) {
+               data1 += 3;
+            }
+            data2 = Math.ceil(Math.random() * data1);
+            if (data2 < 6) {
+               data2 = data2 + 3;
+            }
+
+            if (data2 >= data1) {
+               data1 = data2 + 2;
+            }
+            answer1 = data1 - data2;
+         }
+         setView()
+      }
+
+
+      function getNewData() {
+         document.getElementById("dataAnswer1").focus();
+         document.getElementById("dataAnswer2").focus();
+         getNewData1();
+         createIssue1();
+         if (Math.random() > 0.8) {
+            document.getElementById("div1").style.display = "none";
+            document.getElementById("div2").style.display = "block";
+         } else {
+            document.getElementById("div2").style.display = "none";
+            document.getElementById("div1").style.display = "block";
+         }
+      }
+
+      document.getElementById("dataAnswer1").focus();
+      document.getElementById("dataAnswer2").focus();
+
+      function setView() {
+         document.getElementById("divData1").innerHTML = data1;
+         document.getElementById("divData2").innerHTML = data2;
+         if (type == 0) {
+            document.getElementById("divType").innerHTML = "+";
+         } else {
+            document.getElementById("divType").innerHTML = "-";
+         }
+      }
+
+      document.getElementById("submitBtn1").addEventListener("click", function () {
+         checkAwanser("dataAnswer1", answer1);
+      });
+
+      document.getElementById("dataAnswer1").addEventListener("keydown", function (event) {
+         if (event.keyCode === 13) {
+            //event.preventDefault();
+            checkAwanser("dataAnswer1", answer1);
+         }
+      });
+
+      document.getElementById("submitBtn2").addEventListener("click", function () {
+         checkAwanser("dataAnswer2", issue1Asw);
+      });
+
+      document.getElementById("dataAnswer2").addEventListener("keydown", function (event) {
+         if (event.keyCode === 13) {
+            //event.preventDefault();
+            checkAwanser("dataAnswer2", issue1Asw);
+         }
+      });
+
+      createIssue1();
+
+      function createIssue1() {
+         var a0 = Math.ceil(Math.random() * 6) + 1;
+         var a1 = Math.ceil(Math.random() * 10) + 1;
+         var a2 = a1 + Math.ceil(Math.random() * 5) + 2;
+         issue1Asw = a2 - a1 + a0;
+         issue1Data = [];
+         issue1Data.push(a0);
+         issue1Data.push(a1);
+         issue1Data.push(a2);
+         var str = "";
+         for (var i = 0; i < issue1Data.length; i++) {
+            str += issue1Str[i] + issue1Data[i];
+         }
+         str += issue1Str[issue1Str.length - 1];
+         document.getElementById("divIssue1").innerHTML = str;
+      }
+
+
+      function checkAwanser(answerDivId, answer) {
+         var a = document.getElementById(answerDivId).value;
+         total++;
+         window.localStorage.setItem("total", total);
+         if (a == answer) {
+            score = parseInt(score);
+            score += 1;
+            document.getElementById("divScore").innerHTML = score;
+            window.localStorage.setItem("scroe", score);
+            console.log("答案正确：" + answer1);
+            document.getElementById(answerDivId).value = "";
+            document.getElementById("divRate").innerHTML = (score / total * 100.0).toFixed(1);
+			createAudio("yes.wav");
+            getNewData();
+         } else if (a == 111777) {
+            window.localStorage.setItem("scroe", 0);
+            window.localStorage.setItem("total", 0);
+            window.location.reload();
+         } else {
+            document.getElementById("divRate").innerHTML = (score / total * 100.0).toFixed(1);
+         }
+      }
+
+   })();
+
+
+
+</script>

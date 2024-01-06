@@ -86,7 +86,7 @@
 
     function createAudio(srcFile) {
         var audio = document.createElement("audio");
-        audio.src = "src/" + srcFile;
+        audio.src = "./src/" + srcFile;
         audio.play();
     }
 
