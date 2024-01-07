@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>数学计算</title>
+
+<style type="text/css">
+   html body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+   }
+
+   .full-col {
+      margin: 0;
+      background-color: aliceblue;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: start;
+      flex-direction: column;
+   }
+
+   .row-box {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      margin: 20px;
+   }
+
+   .font-red {
+      color: red;
+   }
+
+   .font-green {
+      color: green;
+   }
+
+   .content-box {
+      display: flex;
+      font-size: 60px;
+      margin: 20px;
+      justify-content: center;
+   }
+
+
+   .my-input {
+      width: 50%;
+      height: 120px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: inline-flex;
+      font-size: 100px;
+      padding-left: 50px;
+      padding-right: 50px;
+      background-color: aquamarine;
+      overflow: hidden;
+      max-lines: 1;
+   }
+
+   .my-btn {
+      width: 60%;
+      height: 150px;
+      border: none;
+      background-color: cyan;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      font-size: 100px;
+      padding-left: 50px;
+      padding-right: 50px;
+
+   }
+
+   input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type=number] {
+      -moz-appearance: textfield;
+   }
+</style>
+<script src="src.js"></script>
+
+<body>
+   <div class="full-col">
+
+      <div class="content-box" style="color: red;">
+         一年级数学（上）挑战
+      </div>
+
+      <div class="row-box">
+
+         <div class="content-box font-green">
+            得分：
+         </div>
+         <div class="content-box font-green" id="divScore">
+         </div>
+
+         <div class="content-box font-green">
+            准度：
+         </div>
+
+         <div class="content-box font-green" id="divRate">
+
+         </div>
+         <div class="content-box font-green">
+            %
+         </div>
+
+      </div>
+
+      <div class="row-box content-box" id="issue-str">
+      </div>
+
+      <div class="row-box">
+         <input type="number" class="my-input" id="dataAnswer1" />
+      </div>
+
+
+      <div class="row-box">
+         <button class="my-btn" id="submitBtn1" style="margin-top: 60px;">答应用题</button>
+      </div>
+
+   </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+   (function () {
+      var date = new Date();
+      var total = 0;
+      var key = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      var score = window.localStorage.getItem("scroe");
+      var total = window.localStorage.getItem("total");
+      var scoreKey = window.localStorage.getItem("scoreKey");
+
+      if (!score) {
+         window.localStorage.setItem("total", 0);
+         window.localStorage.setItem("scroe", 0);
+         window.localStorage.setItem("scoreKey", key);
+      } else if (window.localStorage.getItem("scoreKey") != key) {
+         window.localStorage.setItem("total", 0);
+         window.localStorage.setItem("scroe", 0);
+         window.localStorage.setItem("scoreKey", key);
+         score = 0;
+         total = 0;
+      }
+
+      console.log(score, total);
+
+      setScore();
+
+      var maxData = 12;
+      var issueStr = "";
+      var data = [];
+      var answer = 0;
+
+      issueStr += "我吃掉了#个苹果,妈妈又给了我#个，我现在有#个，那我原来有几个苹果？\n";
+      issueStr += "总共有#个人,从前往后数，我是第#个，那么我前面有几个人？\n";
+      issueStr += "总共有#个人,从前往后数，我是第#个，那么我后面有几个人？\n";
+      issueStr += "总共有#个人,从后往前数，我是第#个，那么我后面有几个人？\n";
+      issueStr += "总共有#个人,从后往前数，我是第#个，那么我前面有几个人？\n";
+      issueStr += "从后往前数，我是第#个，从前往后数，我是第#个，那么一共有几个人？\n";
+      issueStr += "从第#页看到第#页，一共看了几页？\n";
+      issueStr += "加法&nbsp：#&nbsp+&nbsp#&nbsp=&nbsp？\n";
+      issueStr += "减法&nbsp：#&nbsp-&nbsp#&nbsp=&nbsp？";
+      var issueArr = issueStr.split("\n");
+
+      var divParent = document.getElementById("issue-str");
+
+      createIssue();
+
+      function createIssue() {
+         var size = issueArr.length;
+         console.log("size", size);
+         var index = Math.round(Math.random() * size);
+         if (index == size) {
+            index = size - 1;
+         }
+         data = [];
+
+         switch (index) {
+            case 0:
+               data[0] = getData(maxData);
+               data[1] = getData(maxData);
+               data[2] = data[0] + data[1] + 2;
+               answer = data[2] - data[1] + data[0];
+               break;
+
+            case 1:
+            case 3:
+               data[0] = getData(maxData);
+               data[1] = getLessData(data[0]);
+               answer = data[1] - 1;
+               break;
+
+            case 2:
+            case 4:
+               data[0] = getData(maxData);
+               data[1] = getLessData(data[0]);
+               answer = data[0] - data[1];
+               break;
+
+            case 5:
+               data[0] = getData(maxData);
+               data[1] = getData(data[0]);
+               answer = data[0] + data[1] - 1;
+               break;
+
+            case 6:
+               data[0] = getData(maxData + 10);
+               data[1] = getMoreData(data[0]);
+               answer = data[1] - data[0] + 1;
+               break;
+
+            case 7:
+               data[0] = getData(maxData)+10;
+               data[1] = getData(data[0]+5);
+               answer = data[1] + data[0];
+               break;
+
+            case 8:
+               data[0] = getData(maxData)+10;
+               data[1] = getLessData(data[0]);
+               answer = data[0] - data[1];
+               break;
+         }
+         createDom(data, answer, issueArr[index]);
+      }
+
+
+      function createDom(data, answer, strArr) {
+         console.log(data, strArr);
+         var strDom = strArr.split("#");
+         divParent.innerHTML = "";
+         var str = "";
+         for (var i = 0; i < data.length; i++) {
+            str += strDom[i] + data[i];
+         }
+         str += strDom[strDom.length - 1];
+         divParent.innerHTML = str;
+      }
+
+      setEvent();
+
+      function setEvent() {
+         document.getElementById("submitBtn1").addEventListener("click", function () {
+            checkAwanser();
+         });
+
+         document.getElementById("dataAnswer1").focus();
+
+         document.getElementById("dataAnswer1").addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+               checkAwanser();
+            }
+         });
+
+      }
+
+      function checkAwanser() {
+         var v = document.getElementById("dataAnswer1").value;
+         if (v == answer) {
+            youRight();
+         } else if (v == 111222) {
+            window.localStorage.setItem("scroe", 0);
+            window.localStorage.setItem("total", 0);
+            score = window.localStorage.getItem("scroe");
+            total = window.localStorage.getItem("total");
+            //window.location.reload();
+            console.log("reset", score, total);
+            setScore();
+         } else {
+            youError();
+         }
+         setScore();
+      }
+
+      function youRight() {
+         console.log("答对了！");
+         createAudio("yes.wav");
+         score = parseInt(score);
+         score += 1;
+         total = parseInt(total);
+         total += 1;
+         createIssue();
+      }
+
+      function youError() {
+         console.log("答错了！");
+         createAudio("no.wav");
+         total = parseInt(total);
+         total += 1;
+      }
+
+      function setScore() {
+         window.localStorage.setItem("scroe", score);
+         window.localStorage.setItem("total", total);
+         document.getElementById("dataAnswer1").value = "";
+         document.getElementById("divScore").innerHTML = score;
+         if (total == 0) {
+            document.getElementById("divRate").innerHTML = 0;
+
+         } else {
+            document.getElementById("divRate").innerHTML = (score / total * 100.0).toFixed(1);
+
+         }
+         console.log("right rate:", score, total);
+      }
+
+      function getData(m) {
+         var a = Math.ceil(Math.random() * m);
+         return a < 5 ? a + 3 : a;
+      }
+
+      function getLessData(m) {
+         return Math.ceil(Math.random() * m);
+      }
+
+      function getMoreData(m) {
+         return Math.ceil(Math.random() * 10) + m;
+      }
+
+   })();
+
+
+
+</script>
