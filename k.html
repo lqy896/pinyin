@@ -85,10 +85,12 @@
         color: red;
         font-size: 20px;
     }
-    .yes{
-      color: green;
+
+    .yes {
+        color: green;
     }
-    .no{
+
+    .no {
         color: red;
     }
 </style>
@@ -119,8 +121,8 @@
         jsonObj.score = 0;
         createData();
     } else {
-        console.log("已有： " + jsonObj);
         jsonObj = JSON.parse(jsonObj)
+        //createData();
     }
 
     window.localStorage.setItem(key, JSON.stringify(jsonObj));
@@ -153,7 +155,7 @@
             }
             var c1 = document.createElement("div");
             c1.className = "box1";
-            c1.innerHTML = jsonObj.arr[i][1] + f + jsonObj.arr[i][2]+"=";
+            c1.innerHTML = jsonObj.arr[i][1] + f + jsonObj.arr[i][2] + "=";
 
             var c2 = document.createElement("div");
             c2.className = "box1";
@@ -170,25 +172,28 @@
     }
 
     function getData1() {
-        var a = Math.ceil(Math.random() * 15)+6;
-        if(a>25){
-            a=a-5;
+        var a = Math.ceil(Math.random() * maxData);
+        while (a < 8) {
+            a = Math.ceil(Math.random() * maxData);
         }
 
-        var tmp = maxData - a;
-        if (tmp <= 0) {
-            tmp = 3;
+        var b = Math.ceil(Math.random() * maxData);
+        while (b < 8) {
+            b = Math.ceil(Math.random() * maxData);
         }
-        var b = Math.ceil(Math.random() * tmp);
         return [0, a, b, a + b];
     }
 
     function getData2() {
-        var a = Math.ceil(Math.random() * maxData)+10;
-        if(a>25){
-            a=a-5;
+        var a = Math.ceil(Math.random() * maxData);
+        while (a < 10) {
+            a = Math.ceil(Math.random() * maxData);
         }
-        var b = Math.floor(Math.random() * a);
+
+        var b = Math.ceil(Math.random() * maxData);
+        while (b >= a) {
+            b = Math.ceil(Math.random() * maxData);
+        }
         return [1, a, b, a - b];
     }
 
