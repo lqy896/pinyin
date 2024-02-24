@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+    <script src="https://bce.bdstatic.com/lib/@baiducloud/sdk/1.0.0-rc.40/baidubce-sdk.bundle.min.js"></script>
+    <script src="bootstrap/js/jquery.js"></script>
+</head>
+<html>
+<style type="text/css">
+    html body {
+        width: 100%;
+        height: 100;
+        margin: 0;
+    }
+
+    .box0 {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content:flex-start;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .big-font {
+        font-size: 30px;
+        color: green;
+        font-weight: 400;
+    }
+    .my-textarea{
+        width: 90%;
+        height: 200px;
+    }
+</style>
+
+<body>
+    <div class="box0 big-font">
+        <div>
+            <button onclick="clearStr()">
+                删除现有
+            </button>
+        </div>
+        <div >
+            
+            <button onclick="submitData()">保存文字说明</button>
+        </div>
+        <div>
+            <textarea class="my-textarea" id="strId"></textarea>
+        </div>
+        <div>
+
+            <input type="file" name="fileName" id="fileId" />
+            <button onclick="uploadImg()">上传文件</button>
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    var ak = "5cf1d64d351f4b9e8a9b9b41091b8ef1";
+    var sk = "95be2f578ffb4c708e551b3627f77a5d";
+    var key = "xml_homework";
+    var endPoint = "https://su.bcebos.com";
+    var bk = "liqinyu01";
+    var jsonObj = {
+        data:[]
+    };
+
+    $.ajaxSetup({ cache: false });
+
+    var config = {
+        endpoint: endPoint,
+        credentials: {
+            ak: ak,
+            sk: sk
+        }
+    };
+    var client = new baidubce.sdk.BosClient(config);
+
+
+    fetchStr();
+    
+
+    function submitData(){
+        var str=$("#strId").val();
+        console.log(str);
+        jsonObj.data.push({text:str});
+        putStr(jsonObj);
+    }
+
+    function putStr(str) {
+        str = JSON.stringify(str);
+        console.log("上传文字",str);
+        client.putObjectFromString(bk, key, str)
+            .then(response => console.log("上传完成"))
+            .catch(error => console.error("error"));
+    }
+
+    function clearStr() {
+        jsonObj={};
+        jsonObj.data=[];
+        putStr(jsonObj);
+    }
+
+    function fetchStr() {
+        $.get("https://liqinyu01.su.bcebos.com/xml_homework", function (data) {
+            alert(data);
+            if(data){
+                jsonObj = JSON.parse(data);
+                if(!jsonObj.data){
+                    jsonObj.data=[];
+                }
+            }else{
+                jsonObj={};
+                jsonObj.data=[];
+             //   putStr(jsonObj);
+            }
+        })
+    }
+
+    
+
+
+    function uploadImg() {
+        var fs = $("#fileId").prop("files")
+        var keyImg=Date.now()+".jpg";
+        console.log("file key",keyImg);
+        client.putObjectFromBlob(bk,keyImg,fs[0]).then(res=>{
+            console.log("upload file success!");
+            jsonObj.data.push({img:"https://liqinyu01.su.bcebos.com/"+keyImg});
+            putStr(jsonObj);
+        });
+        
+    }
+
+
+</script>
