@@ -8,6 +8,7 @@
     <script src="https://bce.bdstatic.com/lib/@baiducloud/sdk/1.0.0-rc.40/baidubce-sdk.bundle.min.js"></script>
     <script src="bootstrap/js/jquery.js"></script>
 </head>
+<title>李君晔作业管理</title>
 <html>
 <style type="text/css">
     html body {
@@ -20,34 +21,46 @@
         width: 100vw;
         height: 100vh;
         display: flex;
-        justify-content:flex-start;
+        justify-content: flex-start;
         align-items: center;
         flex-direction: column;
     }
 
     .big-font {
-        font-size: 30px;
+        font-size: 20px;
         color: green;
         font-weight: 400;
     }
-    .my-textarea{
-        width: 90%;
+
+    .my-margin {
+        margin: 10px;
+    }
+
+    .my-textarea {
+        width: 100%;
         height: 200px;
     }
 </style>
 
 <body>
     <div class="box0 big-font">
-        <div>
+        <div class="my-margin">
+            李君晔作业管理
+        </div>
+        <div class="my-margin">
+            <button onclick="javascript:location.href='wk.html'">
+                预览
+            </button>
+        </div>
+        <div class="my-margin">
             <button onclick="clearStr()">
                 删除现有
             </button>
         </div>
-        <div >
-            
+        <div class="my-margin">
             <button onclick="submitData()">保存文字说明</button>
         </div>
-        <div>
+        <div style="width: 80%;margin: 20px;">
             <textarea class="my-textarea" id="strId"></textarea>
         </div>
         <div>
@@ -60,83 +73,67 @@
 </body>
 
 </html>
+<script src="client.js"></script>
 
 <script type="text/javascript">
 
-    var ak = "5cf1d64d351f4b9e8a9b9b41091b8ef1";
-    var sk = "95be2f578ffb4c708e551b3627f77a5d";
-    var key = "xml_homework";
-    var endPoint = "https://su.bcebos.com";
-    var bk = "liqinyu01";
     var jsonObj = {
-        data:[]
+        data: []
     };
 
     $.ajaxSetup({ cache: false });
 
-    var config = {
-        endpoint: endPoint,
-        credentials: {
-            ak: ak,
-            sk: sk
-        }
-    };
-    var client = new baidubce.sdk.BosClient(config);
-
-
     fetchStr();
-    
 
-    function submitData(){
-        var str=$("#strId").val();
+    function submitData() {
+        var str = $("#strId").val();
         console.log(str);
-        jsonObj.data.push({text:str});
+        jsonObj.data.push({ text: str });
         putStr(jsonObj);
     }
 
     function putStr(str) {
         str = JSON.stringify(str);
-        console.log("上传文字",str);
+        console.log("上传文字", str);
         client.putObjectFromString(bk, key, str)
             .then(response => console.log("上传完成"))
             .catch(error => console.error("error"));
     }
 
     function clearStr() {
-        jsonObj={};
-        jsonObj.data=[];
-        putStr(jsonObj);
+        if (confirm("清空数据？")) {
+            jsonObj = {};
+            jsonObj.data = [];
+            putStr(jsonObj);
+        }
+
     }
 
     function fetchStr() {
         $.get("https://liqinyu01.su.bcebos.com/xml_homework", function (data) {
-            alert(data);
-            if(data){
+            if (data) {
                 jsonObj = JSON.parse(data);
-                if(!jsonObj.data){
-                    jsonObj.data=[];
+                if (!jsonObj.data) {
+                    jsonObj.data = [];
                 }
-            }else{
-                jsonObj={};
-                jsonObj.data=[];
-             //   putStr(jsonObj);
+            } else {
+                jsonObj = {};
+                jsonObj.data = [];
             }
         })
     }
 
-    
-
 
     function uploadImg() {
         var fs = $("#fileId").prop("files")
-        var keyImg=Date.now()+".jpg";
-        console.log("file key",keyImg);
-        client.putObjectFromBlob(bk,keyImg,fs[0]).then(res=>{
-            console.log("upload file success!");
-            jsonObj.data.push({img:"https://liqinyu01.su.bcebos.com/"+keyImg});
+        var keyImg = Date.now() + ".jpg";
+        console.log("file key", keyImg);
+        client.putObjectFromBlob(bk, keyImg, fs[0]).then(res => {
+            alert("upload file success!");
+            jsonObj.data.push({ img: "https://liqinyu01.su.bcebos.com/" + keyImg });
             putStr(jsonObj);
         });
-        
+
     }
 
 
