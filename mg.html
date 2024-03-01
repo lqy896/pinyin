@@ -26,10 +26,43 @@
         flex-direction: column;
     }
 
+    .my-row {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .item-w50 {
+        flex-grow: 1;
+        text-align: center;
+        margin: 10px;
+    }
+
+    .item-w30 {
+        flex-grow: 1;
+        text-align: center;
+        margin: 10px;
+        overflow: hidden;
+    }
+
+    .item-w70 {
+        flex-grow: 2;
+        text-align: center;
+        margin: 10px;
+    }
+
+    .main-bg {
+        background-color: aqua;
+    }
+
+    .red-bg {
+        background-color: brown;
+    }
+
     .big-font {
-        font-size: 20px;
+        font-size: 30px;
         color: green;
-        font-weight: 400;
     }
 
     .my-margin {
@@ -37,38 +70,50 @@
     }
 
     .my-textarea {
-        width: 100%;
+        flex-grow: 1;
         height: 200px;
+        margin: 10px;
     }
 </style>
 
 <body>
     <div class="box0 big-font">
-        <div class="my-margin">
+        <div class="my-margin big-font">
             李君晔作业管理
         </div>
-        <div class="my-margin">
-            <button onclick="javascript:location.href='wk.html'">
+
+        <div class="my-row">
+            <div class="item-w50 main-bg" onclick="javascript:location.href='wk.html'">
                 预览
-            </button>
+            </div>
+
+            <div class="item-w50 red-bg" onclick="clearStr()">
+                清空
+            </div>
         </div>
-        <div class="my-margin">
-            <button onclick="clearStr()">
-                删除现有
-            </button>
-        </div>
-        <div class="my-margin">
-            <button onclick="submitData()">保存文字说明</button>
-        </div>
-        <div style="width: 80%;margin: 20px;">
+
+        <div class="my-row">
             <textarea class="my-textarea" id="strId"></textarea>
         </div>
-        <div>
 
-            <input type="file" name="fileName" id="fileId" />
-            <button onclick="uploadImg()">上传文件</button>
-
+        <div class="my-row">
+            <div class="item-w50 main-bg" onclick="submitData()">
+                保存文字说明
+            </div>
         </div>
+
+        <div class="my-row">
+            <div class="item-w30 main-bg">
+                <input type="file" name="fileName" id="fileId" />
+            </div>
+        </div>
+
+        <div class="my-row">
+            <div class="item-w50 main-bg" onclick="uploadImg()">
+                上传
+            </div>
+        </div>
+
     </div>
 </body>
 
@@ -85,9 +130,13 @@
 
     fetchStr();
 
+    function deleteObject(k) {
+        client.deleteObject("liqinyu01", k);
+    }
+
     function submitData() {
         var str = $("#strId").val();
-        console.log(str);
+        str = str.replace("\n", "</br>");
         jsonObj.data.push({ text: str });
         putStr(jsonObj);
     }
@@ -95,13 +144,24 @@
     function putStr(str) {
         str = JSON.stringify(str);
         console.log("上传文字", str);
+        if (str.length == 0) {
+            alert("内容为空");
+            return;
+        }
         client.putObjectFromString(bk, key, str)
-            .then(response => console.log("上传完成"))
-            .catch(error => console.error("error"));
+            .then(response => alert("上传完成"))
+            .catch(error => alert("error"));
     }
 
     function clearStr() {
         if (confirm("清空数据？")) {
+            jsonObj.data.forEach(element => {
+                console.log(element);
+                if (element.img) {
+                    var k = element.img.substring(element.img.lastIndexOf("/") + 1)
+                    deleteObject(k)
+                }
+            });
             jsonObj = {};
             jsonObj.data = [];
             putStr(jsonObj);
@@ -129,10 +189,10 @@
         var keyImg = Date.now() + ".jpg";
         console.log("file key", keyImg);
         client.putObjectFromBlob(bk, keyImg, fs[0]).then(res => {
-            alert("upload file success!");
+           // alert("upload file success!");
             jsonObj.data.push({ img: "https://liqinyu01.su.bcebos.com/" + keyImg });
             putStr(jsonObj);
-        });
+        }).catch(error => alert("error"));
 
     }
 

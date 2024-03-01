@@ -41,6 +41,11 @@
 </style>
 
 <body>
+    <div style="margin: 10px;width: 90%;text-align: center;font-size: 25px;color: red;">
+        李君晔的家庭作业
+    </div>
+    <hr>
+
     <div id="d001" style="margin: 10px;width: 90%;text-align: center;">
 
     </div>
@@ -66,10 +71,10 @@
                         for (var i = 0; i < jsonObj.data.length; i++) {
                             var a = jsonObj.data[i];
                             if (a.text) {
-                                str += "<div class='big-font'>" + a.text + "</div>";
+                                str += "<div class='big-font'></br>" + a.text + "</div> <hr>";
                             }
                             if (a.img) {
-                                str += "<div><img class='my-img' src='" + a.img + "'/></div>";
+                                str += "<div></br><img class='my-img' src='" + a.img + "'/></div> <hr>";
                             }
                         }
                         console.log(str);
