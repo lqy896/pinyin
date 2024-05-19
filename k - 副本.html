@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+<html>
+<style type="text/css">
+    .box0-col {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .box0-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .box1 {
+        color: green;
+        font-size: 30px;
+        margin: 5px;
+    }
+
+    .my-input {
+        width: 60px;
+        height: 40px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 10px;
+        display: inline-flex;
+        font-size: 30px;
+        padding-left: 0px;
+        padding-right: 0px;
+        background-color: aquamarine;
+        overflow: hidden;
+        max-lines: 1;
+    }
+
+    .my-btn {
+        width: 50%;
+        height: 50px;
+        border: none;
+        background-color: cyan;
+        border-radius: 10px;
+        margin-top: 10px;
+        font-size: 30px;
+        padding-left: 0px;
+        padding-right: 0px;
+        align-items: center;
+        align-content: center;
+    }
+
+    .my-table {
+        width: 100%;
+        border: 1px solid red;
+        font-size: 14px;
+        text-align: center;
+
+    }
+
+    td {
+        width: 25%;
+        border: 1px solid red;
+    }
+
+    .red0 {
+        color: red;
+        font-size: 25px;
+    }
+
+    .red1 {
+        color: red;
+        font-size: 20px;
+    }
+
+    .yes {
+        color: green;
+    }
+
+    .no {
+        color: red;
+    }
+</style>
+
+<body>
+    <div class="box0-col box1" style="color: red;" id="title">口算</div>
+
+    <div class="box0-col" id="rootDom">
+    </div>
+    <div class="box0-col" id="report">
+        <button class="my-btn" onclick="getReport()">查看报告</button>
+    </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    var rootDom = document.getElementById("rootDom");
+    var maxCount = 25;
+    var maxData = 20;
+    var date = new Date();
+    var key = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    document.getElementById("title").innerHTML = "口算:" + key;
+    var jsonObj = window.localStorage.getItem(key);
+    if (!jsonObj || jsonObj == null || jsonObj == "") {
+        jsonObj = {};
+        jsonObj.score = 0;
+        createData();
+    } else {
+        jsonObj = JSON.parse(jsonObj)
+        //createData();
+    }
+
+    window.localStorage.setItem(key, JSON.stringify(jsonObj));
+
+    createDom();
+
+    function createData() {
+        var arr = [];
+        for (var i = 0; i < maxCount * 4; i++) {
+            if (Math.random() >= 0.5) {
+                arr.push(getData1());
+            } else {
+                arr.push(getData2());
+            }
+        }
+        jsonObj.arr = arr;
+    }
+
+    function createDom() {
+        var div;
+        for (var i = 0; i < jsonObj.arr.length; i++) {
+            if (i % 2 == 0) {
+                div = document.createElement("div");
+                div.className = "box0-row";
+                rootDom.appendChild(div);
+            }
+            var f = "+";
+            if (jsonObj.arr[i][0] == 1) {
+                f = "-";
+            }
+            var c1 = document.createElement("div");
+            c1.className = "box1";
+            c1.innerHTML = jsonObj.arr[i][1] + f + jsonObj.arr[i][2] + "=";
+
+            var c2 = document.createElement("div");
+            c2.className = "box1";
+            if (jsonObj.arr[i].length == 4) {
+                c2.innerHTML = "<input type=\"number\" class=\"my-input\" id=\"input_" + i + "\" onkeyup=\"checkData(" + i + ")\"/>";
+            } else {
+                c2.innerHTML = "<input type=\"number\" class=\"my-input\" value = \"" + jsonObj.arr[i][4] + "\" id=\"input_" + i + "\" onkeyup=\"checkData(" + i + ")\"   />";
+            }
+
+            div.appendChild(c1);
+            div.appendChild(c2);
+
+        }
+    }
+
+    function getData1() {
+        var a = Math.ceil(Math.random() * maxData);
+        while (a < 8) {
+            a = Math.ceil(Math.random() * maxData);
+        }
+
+        var b = Math.ceil(Math.random() * maxData);
+        while (b < 8) {
+            b = Math.ceil(Math.random() * maxData);
+        }
+        return [0, a, b, a + b];
+    }
+
+    function getData2() {
+        var a = Math.ceil(Math.random() * maxData);
+        while (a < 10) {
+            a = Math.ceil(Math.random() * maxData);
+        }
+
+        var b = Math.ceil(Math.random() * maxData);
+        while (b >= a) {
+            b = Math.ceil(Math.random() * maxData);
+        }
+        return [1, a, b, a - b];
+    }
+
+    function checkData(a) {
+        var value = document.getElementById("input_" + a).value;
+        jsonObj.arr[a][4] = parseInt(value);
+        if (jsonObj.arr[a][4] == 666777) {
+            window.localStorage.setItem(key, "");
+        } else {
+            window.localStorage.setItem(key, JSON.stringify(jsonObj));
+        }
+
+    }
+
+    function getReport() {
+        console.log("个数：" + jsonObj.arr.length);
+
+        var html = "<table class=\"my-table\">";
+        var total = 0;
+        var row = "<tr>";
+        for (var i = 0; i < jsonObj.arr.length; i++) {
+            var f = "+";
+            if (jsonObj.arr[i][0] == 1) {
+                f = "-";
+            }
+            var td = "<td>" + jsonObj.arr[i][1] + f + jsonObj.arr[i][2] + "=";
+            if (jsonObj.arr[i].length == 5) {
+                td += jsonObj.arr[i][4];
+                if (jsonObj.arr[i][4] == jsonObj.arr[i][3]) {
+                    total++;
+                } else {
+                    td += "<span class=\"no\">&nbsp;X</span>";
+                }
+            } else {
+                td += "？";
+            }
+            td += "，</td>";
+
+            if (i == 0) {
+                row += td;
+            } else if (i % 4 == 0) {
+                html += row + "</tr>";
+                row = "<tr>" + td;
+            } else {
+                row += td;
+            }
+        }
+
+
+        html += row + "</tr>";
+        html += "</table>";
+        rootDom.innerHTML = "<div class=\"red0\">李君晔 &nbsp;得分：" + total + "</div>" + html;
+        document.getElementById("report").style.display = "none";
+    }
+
+
+</script>
