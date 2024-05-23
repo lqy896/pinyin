@@ -124,7 +124,7 @@ var BceUtil = function () {
                 str += "<div class='big-font'>" + a.text + "</div> <hr>";
             }
             if (a.img) {
-                str += "<div><img class='my-img' src='" + a.img + "'/></div> <hr>";
+                str += "<div style=\"width:100%;overflow:hidden;\"><img class='my-img' src='" + a.img + "' style=\"width:98%;\"/></div> <hr>";
             }
         }
         console.log(str);
