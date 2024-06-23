@@ -24,7 +24,7 @@
    .row-box {
       display: flex;
       align-items: center;
-      justify-content:flex-start;
+      justify-content: flex-start;
       flex-direction: column;
       height: 100vh;
       margin: 20px;
@@ -115,7 +115,7 @@
       }
       console.log(lever);
       let score = window.localStorage.getItem("scroe");
-      if (score == undefined || score==null) {
+      if (score == undefined || score == null) {
          window.localStorage.setItem("scroe", 0);
          score = window.localStorage.getItem("scroe");
       }
@@ -138,6 +138,14 @@
             }
          });
 
+         document.getElementById("dataAnswer1").addEventListener("keyup", function (event) {
+               var v = document.getElementById("dataAnswer1").value;
+               if(v==res){
+                  checkAwanser();
+               }
+               
+         });
+
       }
 
       function checkAwanser() {
@@ -147,11 +155,13 @@
             score++;
             window.localStorage.setItem("scroe", score);
             document.getElementById("score").innerHTML = "分数:" + score;
-         }else{
+         } else {
             createAudio("no.wav");
          }
          if (v == 111777) {
             window.localStorage.setItem("scroe", 0);
+            score = 0;
+            document.getElementById("score").innerHTML = "分数:" + score;
          }
          document.getElementById("dataAnswer1").value = "";
          create();
@@ -167,10 +177,10 @@
       }
 
       function createAudio(srcFile) {
-        var audio = document.createElement("audio");
-        audio.src = srcFile;
-        audio.play();
-    }
+         var audio = document.createElement("audio");
+         audio.src = srcFile;
+         audio.play();
+      }
 
    })();
 
