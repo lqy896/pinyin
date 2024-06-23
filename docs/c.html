@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>乘法计算</title>
+
+<style type="text/css">
+   html body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+   }
+
+   .full-col {
+      margin: 0;
+      background-color: aliceblue;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: start;
+      flex-direction: column;
+   }
+
+   .row-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 20px;
+   }
+
+   .font-red {
+      color: red;
+   }
+
+   .font-green {
+      color: green;
+   }
+
+   .content-box {
+      display: flex;
+      font-size: 10rem;
+      justify-content: center;
+   }
+
+
+   .my-input {
+      width: 50%;
+      height: 180px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: inline-flex;
+      font-size: 8rem;
+      padding-left: 50px;
+      padding-right: 50px;
+      background-color: aquamarine;
+      overflow: hidden;
+      max-lines: 1;
+   }
+
+   .my-btn {
+      width: 60%;
+      height: 150px;
+      border: none;
+      background-color: cyan;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      font-size: 6rem;
+   }
+
+   input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+   }
+
+   input[type=number] {
+      -moz-appearance: textfield;
+   }
+</style>
+
+
+<body>
+   <div class="row-box">
+      <div class="content-box font-red" id="score">6*6</div>
+      <div class="content-box font-green" id="context"></div>
+      <input class="my-input" type="number" id="dataAnswer1" />
+      <button class="my-btn" id="submitBtn1">提交</button>
+   </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+   (function () {
+      let res = 0;
+      let max = 5;
+      let lever = window.location.href;
+      if (lever.endsWith("a=1")) {
+         max = 5
+      } else if (lever.endsWith("a=2")) {
+         max = 6
+      } else if (lever.endsWith("a=3")) {
+         max = 7
+      }
+      else if (lever.endsWith("a=4")) {
+         max = 8
+      }
+      console.log(lever);
+      let score = window.localStorage.getItem("scroe");
+      if (score == undefined) {
+         window.localStorage.setItem("scroe", 0);
+      }
+      document.getElementById("score").innerHTML = "分数:" + score;
+      console.log(score);
+
+      create();
+
+      setEvent();
+
+      function setEvent() {
+         document.getElementById("submitBtn1").addEventListener("click", function () {
+            checkAwanser();
+         });
+
+
+         document.getElementById("dataAnswer1").addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+               checkAwanser();
+            }
+         });
+
+      }
+
+      function checkAwanser() {
+         var v = document.getElementById("dataAnswer1").value;
+         if (v == res) {
+            score++;
+            window.localStorage.setItem("scroe", score);
+            document.getElementById("score").innerHTML = "分数:" + score;
+         }
+         if (v == 111777) {
+            window.localStorage.setItem("scroe", 0);
+         }
+         document.getElementById("dataAnswer1").value = "";
+         create();
+      }
+
+      function create() {
+         var a = Math.ceil(Math.random() * max + 1);
+         var b = Math.ceil(Math.random() * max + 1);
+         res = a * b;
+         document.getElementById("context").innerHTML = a + " X " + b;
+         console.log("answer is ", res);
+         return res;
+      }
+
+   })();
+
+
+
+</script>
